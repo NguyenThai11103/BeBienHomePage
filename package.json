@@ -1,0 +1,16 @@
+{
+  "name": "one-page-be-bien",
+  "version": "1.0.0",
+  "description": "One-Page Website for Be Bien Seafood Restaurant",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y browser-sync start --server --files \"index.html, style.css, script.js, img/**/*\""
+  },
+  "keywords": [
+    "seafood",
+    "restaurant",
+    "onepage"
+  ],
+  "author": "Antigravity",
+  "license": "ISC"
+}
