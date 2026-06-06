@@ -4,11 +4,11 @@
 
 :root {
     /* Color Palette (Lightened slightly for better readability and vibrant atmosphere) */
-    --bg-main: #121212;
-    --bg-section: #1a1a1a;
-    --bg-card: #222222;
-    --bg-card-hover: #2a2a2a;
-    --border-color: #333333;
+    --bg-main: #1d1d1d;       /* Lightened from #121212 for a brighter dark theme */
+    --bg-section: #262626;    /* Lightened from #1a1a1a */
+    --bg-card: #303030;       /* Lightened from #222222 */
+    --bg-card-hover: #3a3a3a; /* Lightened from #2a2a2a */
+    --border-color: #444444;  /* Lightened from #333333 */
     --border-hover: #ff3b4b;
     
     --primary-red: #ff3b4b;
@@ -19,13 +19,13 @@
     --glow-red-heavy: rgba(255, 59, 75, 0.65);
     
     --text-pure: #ffffff;
-    --text-body: #e2e2e2;
-    --text-muted: #9a9a9a;
+    --text-body: #e6e6e6;
+    --text-muted: #b0b0b0;    /* Lightened from #9a9a9a for improved contrast and legibility */
     --text-gold: #ffc107;
     
     /* Typography */
-    --font-heading: 'Playfair Display', serif;
-    --font-nav: 'Montserrat', sans-serif;
+    --font-heading: 'Be Vietnam Pro', sans-serif;
+    --font-nav: 'Be Vietnam Pro', sans-serif;
     --font-body: 'Be Vietnam Pro', sans-serif;
     
     /* Transitions & Layout constants */
@@ -207,7 +207,7 @@ input, select, textarea, button {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background-color: rgba(18, 18, 18, 0.85);
+    background-color: rgba(29, 29, 29, 0.85); /* Lightened base header backdrop */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -217,7 +217,7 @@ input, select, textarea, button {
 
 .main-header.scrolled {
     height: 70px;
-    background-color: rgba(26, 26, 26, 0.95);
+    background-color: rgba(38, 38, 38, 0.95); /* Lightened scrolled header backdrop */
     border-bottom: 1px solid rgba(255, 59, 75, 0.2);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
@@ -544,7 +544,7 @@ input, select, textarea, button {
     position: absolute;
     bottom: 125px; /* Shifted up to overlay on the main circle's bottom edge and completely clear the bottom preview dot */
     z-index: 4;
-    background: rgba(18, 18, 18, 0.92);
+    background: rgba(29, 29, 29, 0.92); /* Lightened details badge background */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--border-color);
@@ -870,10 +870,55 @@ input, select, textarea, button {
     perspective: 2000px; /* Increased 3D depth perspective for larger size */
 }
 
+.book-cover {
+    position: absolute;
+    width: 1170px; /* 1120px open book + 50px margins */
+    height: 790px; /* 750px pages + 40px margins */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1f1410 0%, #0d0806 100%); /* Rich deep mahogany leather cover */
+    border: 5px solid #0d0806;
+    border-radius: 16px;
+    box-shadow: 
+        0 30px 65px rgba(0, 0, 0, 0.95), /* Heavy realistic drop shadow */
+        inset 0 0 50px rgba(0, 0, 0, 0.9), /* Leather texture shading */
+        0 0 30px rgba(255, 59, 75, 0.1); /* Subtle theme glow behind binder */
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Inner gold/bronze stitching line inside the cover border */
+.book-cover::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px dashed rgba(163, 112, 76, 0.25); /* Luxury gold stitching */
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+/* Vertical spine binder block in the center */
+.book-cover-spine {
+    position: absolute;
+    width: 32px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #070403 0%, #150d0a 30%, #291b16 50%, #150d0a 70%, #070403 100%);
+    box-shadow: 0 0 15px rgba(0,0,0,0.8);
+    z-index: 2;
+}
+
 .book {
     position: absolute;
     width: 560px; /* Increased to fit even larger size */
     height: 750px; /* Increased to fit even larger size */
+    z-index: 2; /* Placed on top of the cover background */
     transform-style: preserve-3d;
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     transform-origin: left center;
@@ -957,7 +1002,7 @@ input, select, textarea, button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: rgba(22, 22, 22, 0.9);
+    background-color: rgba(48, 48, 48, 0.9); /* Lightened nav button background */
     border: 1px solid var(--border-color);
     color: var(--text-pure);
     display: flex;
@@ -1334,7 +1379,7 @@ input, select, textarea, button {
 .form-group select, 
 .form-group textarea {
     width: 100%;
-    background-color: rgba(18, 18, 18, 0.4);
+    background-color: rgba(29, 29, 29, 0.4); /* Lightened form input backgrounds */
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 12px 16px;
@@ -1358,7 +1403,7 @@ input, select, textarea, button {
 .form-group textarea:focus {
     border-color: var(--primary-red);
     box-shadow: 0 0 8px rgba(255, 42, 58, 0.2);
-    background-color: rgba(7, 7, 7, 0.7);
+    background-color: rgba(15, 15, 15, 0.7); /* Lightened input focus state */
 }
 
 /* Form date and time styles for dark theme */

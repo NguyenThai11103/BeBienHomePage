@@ -95,11 +95,6 @@
                             <div class="dish-item" data-index="2" style="background-image: url('img/monan/3.jpg');"></div>
                             <div class="dish-item" data-index="3" style="background-image: url('img/monan/4.jpg');"></div>
                         </div>
-
-                        <!-- Active dish details overlay badge -->
-                        <div class="showcase-details-badge">
-                            <span id="hero-dish-tag" class="text-accent uppercase font-nav">Tôm Hùm Phô Mai</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -167,7 +162,7 @@
                     <!-- Card 1: Lobster -->
                     <div class="dish-card">
                         <div class="dish-image-container">
-                            <img src="img/dish_lobster.png" alt="Tôm hùm nướng phô mai vàng ruộm béo ngậy" class="dish-img" loading="lazy">
+                            <img src="img/monan/1.jpg" alt="Tôm hùm nướng phô mai vàng ruộm béo ngậy" class="dish-img" loading="lazy">
                             <span class="dish-tag">Bán Chạy</span>
                         </div>
                         <div class="dish-info">
@@ -191,7 +186,7 @@
                     <!-- Card 2: King Crab -->
                     <div class="dish-card">
                         <div class="dish-image-container">
-                            <img src="img/dish_king_crab.png" alt="Cua Hoàng Đế sốt trứng muối vàng óng" class="dish-img" loading="lazy">
+                            <img src="img/monan/2.jpg" alt="Cua Hoàng Đế sốt trứng muối vàng óng" class="dish-img" loading="lazy">
                             <span class="dish-tag">Signature</span>
                         </div>
                         <div class="dish-info">
@@ -215,7 +210,7 @@
                     <!-- Card 3: Oysters -->
                     <div class="dish-card">
                         <div class="dish-image-container">
-                            <img src="img/dish_oysters.png" alt="Hàu nướng mỡ hành thơm phức" class="dish-img" loading="lazy">
+                            <img src="img/monan/3.jpg" alt="Hàu nướng mỡ hành thơm phức" class="dish-img" loading="lazy">
                             <span class="dish-tag">Ưa Thích</span>
                         </div>
                         <div class="dish-info">
@@ -239,7 +234,7 @@
                     <!-- Card 4: Salmon -->
                     <div class="dish-card">
                         <div class="dish-image-container">
-                            <img src="img/dish_salmon.png" alt="Cá hồi áp chảo sốt chanh leo đẹp mắt" class="dish-img" loading="lazy">
+                            <img src="img/monan/4.jpg" alt="Cá hồi áp chảo sốt chanh leo đẹp mắt" class="dish-img" loading="lazy">
                             <span class="dish-tag">Mới</span>
                         </div>
                         <div class="dish-info">
@@ -267,14 +262,17 @@
         <section class="menu-section section-padding" id="menu">
             <div class="container">
                 <div class="section-header text-center">
-                    <span class="sub-title text-accent uppercase">Trải Nghiệm Độc Bản</span>
-                    <h2 class="section-title">Thực Đơn Sách Lật 3D</h2>
-                    <div class="divider"></div>
+                    <h2 class="section-title">Thực Đơn</h2>
                     <p class="menu-tip-text">Bấm vào mép trang sách hoặc sử dụng các mũi tên để lật trang</p>
                 </div>
             </div>
 
             <div class="book-container">
+                    <!-- Menu Book Cover Background -->
+                    <div class="book-cover">
+                        <div class="book-cover-spine"></div>
+                    </div>
+
                     <!-- Navigation Buttons -->
                     <button class="book-nav-btn prev-btn" id="book-prev-btn" aria-label="Trang trước">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -489,14 +487,14 @@
                                 <div class="contact-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                                 <div class="contact-text">
                                     <h4>Địa chỉ nhà hàng</h4>
-                                    <p>Số 120 Võ Nguyên Giáp, Quận Sơn Trà, TP. Đà Nẵng</p>
+                                    <p>Số 202 Võ Nguyên Giáp, Quận Sơn Trà, TP. Đà Nẵng</p>
                                 </div>
                             </div>
                             <div class="contact-info-item">
                                 <div class="contact-icon"><i class="fa-solid fa-phone-volume"></i></div>
                                 <div class="contact-text">
                                     <h4>Hotline đặt bàn</h4>
-                                    <p class="text-accent text-strong">0905.123.456 - (0236) 3.789.999</p>
+                                    <p class="text-accent text-strong">(0236) 2 800.777  - 0935.618.949 - 0905.775.142</p>
                                 </div>
                             </div>
                             <div class="contact-info-item">
@@ -535,15 +533,8 @@
                                     <input type="tel" id="form-phone" placeholder="Ví dụ: 0905123456" required autocomplete="tel">
                                 </div>
                                 <div class="form-group">
-                                    <label for="form-guests"><i class="fa-solid fa-users"></i> Số lượng khách *</label>
-                                    <select id="form-guests" required>
-                                        <option value="" disabled selected>Chọn số khách</option>
-                                        <option value="1">1 người</option>
-                                        <option value="2">2 người</option>
-                                        <option value="3-4">3 - 4 người</option>
-                                        <option value="5-8">5 - 8 người</option>
-                                        <option value="9+">Trên 8 người (Tiệc)</option>
-                                    </select>
+                                    <label for="form-guests"><i class="fa-solid fa-users"></i> Số lượng khách</label>
+                                    <input type="number" id="form-guests" placeholder="Ví dụ: 2" min="1" required>
                                 </div>
                             </div>
 
@@ -578,7 +569,7 @@
             <div class="grid grid-3 footer-grid">
                 <div class="footer-col-brand">
                     <a href="#home" class="logo footer-logo">
-                        <img src="img/logo/logo.png" alt="Logo Hải Sản Bé Biển" class="logo-img">
+                        <img src="img/logo/logo.png?v=1.2" alt="Logo Hải Sản Bé Biển" class="logo-img">
                     </a>
                     <p class="footer-desc">
                         Mang lại hương vị đại dương đích thực kết hợp dịch vụ đẳng cấp 5 sao và không gian thưởng tiệc độc bản.
