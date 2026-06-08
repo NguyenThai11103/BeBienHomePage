@@ -251,11 +251,15 @@ input, select, textarea, button {
 }
 
 .logo-img {
-    height: 52px;
+    height: 60px;
     width: auto;
     object-fit: contain;
     transition: var(--transition-normal);
     filter: drop-shadow(0 0 8px rgba(255, 59, 75, 0.15));
+}
+
+.main-header .logo-img {
+    margin-left: -18px; /* Push logo closer to the left margin/edge */
 }
 
 .logo-img:hover {
@@ -264,17 +268,20 @@ input, select, textarea, button {
 }
 
 .main-header.scrolled .logo-img {
-    height: 44px;
+    height: 50px;
+    margin-left: -14px; /* Adjust left margin when scrolled */
 }
 
 .footer-logo .logo-img {
-    height: 60px;
+    height: 70px;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
     gap: 24px;
+    flex: 1;
+    margin-left: 45px; /* Pull the navigation menu closer to the logo */
 }
 
 .nav-link {
@@ -319,7 +326,7 @@ input, select, textarea, button {
 .btn-nav-book {
     padding: 10px 20px;
     font-size: 12px;
-    margin-left: 10px;
+    margin-left: auto; /* Push the booking button to the far right of the nav-links flex container */
 }
 
 .mobile-nav-toggle {
@@ -337,7 +344,7 @@ input, select, textarea, button {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background: url('img/hero_seafood_banquet.png') no-repeat center center/cover;
+    background: url('https://toquoc.mediacdn.vn/280518851207290880/2023/2/20/a-1-16768576833112102460152.jpg') no-repeat center center/cover;
     padding-top: var(--header-height);
     overflow: hidden;
 }
@@ -1705,6 +1712,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
         z-index: 999;
+        flex: none; /* Reset desktop flex */
+        margin-left: 0; /* Reset desktop margin */
     }
 
     .nav-links.active {
