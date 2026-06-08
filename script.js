@@ -255,102 +255,283 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       7. HERO ROTATING CIRCULAR SHOWCASE LOGIC
+       7. HERO RADIAL SHOWCASE AUTO-ROTATE
        ========================================== */
-    const heroDotsRing = document.getElementById('hero-dots-ring');
-    const heroDots = document.querySelectorAll('.showcase-dot');
-    const heroDishes = document.querySelectorAll('.dish-item');
-    const heroDishTag = document.getElementById('hero-dish-tag');
+    const radialSlides = document.querySelectorAll('.radial-slide');
+    const radialDishName = document.getElementById('radial-dish-name');
     
-    const dishNames = [
+    const radialDishNames = [
         "Tôm Hùm Nướng Phô Mai",
         "Cua Hoàng Đế Trứng Muối",
         "Hàu Sữa Nướng Mỡ Hành",
         "Cá Hồi Sốt Chanh Leo"
     ];
     
-    let activeHeroIndex = 0;
-    let heroRotationInterval;
+    let radialActiveIndex = 0;
     
-    function switchHeroDish(index) {
-        if (index === activeHeroIndex) return;
-        
-        activeHeroIndex = index;
-        
-        // 1. Rotate outer dots ring (bring selected dot to top: rotate by -index * 90deg)
-        const rotationAngle = -index * 90;
-        if (heroDotsRing) {
-            heroDotsRing.style.transform = `rotate(${rotationAngle}deg)`;
-        }
-        
-        // 2. Keep the preview dot images upright by counter-rotating them
-        heroDots.forEach((dot) => {
-            const dotInner = dot.querySelector('.dot-inner');
-            if (dotInner) {
-                dotInner.style.transform = `rotate(${-rotationAngle}deg)`;
-            }
-            
-            // Toggle active styling
-            const dotIndex = parseInt(dot.getAttribute('data-index'));
-            if (dotIndex === index) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
+    function switchRadialSlide(index) {
+        radialSlides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
         });
         
-        // 3. Switch active dish in central display
-        heroDishes.forEach((dish) => {
-            const dishIndex = parseInt(dish.getAttribute('data-index'));
-            if (dishIndex === index) {
-                dish.classList.add('active');
-            } else {
-                dish.classList.remove('active');
-            }
-        });
-        
-        // 4. Update detail badge tag with smooth fade
-        if (heroDishTag) {
-            heroDishTag.style.opacity = '0';
+        if (radialDishName) {
+            radialDishName.style.opacity = '0';
             setTimeout(() => {
-                heroDishTag.textContent = dishNames[index];
-                heroDishTag.style.opacity = '1';
+                radialDishName.textContent = radialDishNames[index];
+                radialDishName.style.opacity = '1';
             }, 300);
         }
     }
     
-    // Add click event triggers for each preview dot
-    heroDots.forEach((dot) => {
-        dot.addEventListener('click', () => {
-            const index = parseInt(dot.getAttribute('data-index'));
-            switchHeroDish(index);
-            resetHeroAutoplay();
-        });
-    });
-    
-    // Autoplay interval
-    function startHeroAutoplay() {
-        heroRotationInterval = setInterval(() => {
-            let nextIndex = (activeHeroIndex + 1) % heroDishes.length;
-            switchHeroDish(nextIndex);
+    if (radialSlides.length > 0) {
+        setInterval(() => {
+            radialActiveIndex = (radialActiveIndex + 1) % radialSlides.length;
+            switchRadialSlide(radialActiveIndex);
         }, 4000);
     }
     
-    function resetHeroAutoplay() {
-        clearInterval(heroRotationInterval);
-        startHeroAutoplay();
-    }
-    
-    // Auto-run carousel if elements exist on page
-    if (heroDotsRing && heroDots.length > 0 && heroDishes.length > 0) {
-        startHeroAutoplay();
-        
-        // Initialize dots upright on page load
-        heroDots.forEach((dot) => {
-            const dotInner = dot.querySelector('.dot-inner');
-            if (dotInner) {
-                dotInner.style.transform = 'rotate(0deg)';
-            }
+    // Click satellite thumbnails to switch
+    const radialSats = document.querySelectorAll('.radial-sat');
+    radialSats.forEach((sat, i) => {
+        sat.addEventListener('click', () => {
+            radialActiveIndex = i + 1; // sats are for images 2, 3, 4
+            switchRadialSlide(radialActiveIndex);
         });
+    });
+    /* ==========================================
+       8. FEATURED DISHES DATA & DYNAMIC RENDER
+       ========================================== */
+    const featuredDishes = [
+        {
+            id: 1,
+            image: "img/monan/1.jpg",
+            tag: "Bán Chạy",
+            rating: 4.9,
+            stars: 5,
+            title: "Tôm Hùm Nướng Phô Mai",
+            desc: "Tôm hùm bông tươi sống nướng sốt phô mai đút lò thơm ngậy béo mịn kiểu Pháp."
+        },
+        {
+            id: 2,
+            image: "img/monan/2.jpg",
+            tag: "Signature",
+            rating: 5.0,
+            stars: 5,
+            title: "Cua Hoàng Đế Sốt Trứng Muối",
+            desc: "Cua Alaska khổng lồ hấp chín, phủ đẫm sốt trứng muối sánh mịn, thơm bùi đậm đà."
+        },
+        {
+            id: 3,
+            image: "img/monan/3.jpg",
+            tag: "Ưa Thích",
+            rating: 4.8,
+            stars: 4.5,
+            title: "Hàu Sữa Nướng Mỡ Hành",
+            desc: "Hàu sữa béo mọng nướng trên than hồng, xèo xèo mỡ hành thơm lừng, lạc rang giòn rụm."
+        },
+        {
+            id: 4,
+            image: "img/monan/4.jpg",
+            tag: "Mới",
+            rating: 4.9,
+            stars: 5,
+            title: "Cá Hồi Áp Chảo Chanh Leo",
+            desc: "Cá hồi Nauy áp chảo da giòn, thịt ẩm mềm quyện sốt chanh leo chua ngọt thơm mát thanh tao."
+        },
+        {
+            id: 5,
+            image: "img/monan/5.png",
+            tag: "Bán Chạy",
+            rating: 5.0,
+            stars: 5,
+            title: "Lẩu Hải Sản Bé Biển",
+            desc: "Nước lẩu chua cay đậm đà chuẩn vị biển khơi, đầy ắp tôm hùm, cua, mực tươi rói và nấm rau thanh mát."
+        },
+        {
+            id: 6,
+            image: "img/monan/6.png",
+            tag: "Đặc Sản",
+            rating: 4.9,
+            stars: 5,
+            title: "Mực Lá Nướng Sa Tế",
+            desc: "Mực lá dày mình ngọt lịm nướng sốt sa tế đặc chế, thơm cay đậm đà đánh thức mọi giác quan."
+        },
+        {
+            id: 7,
+            image: "img/monan/7.png",
+            tag: "Ưa Thích",
+            rating: 4.8,
+            stars: 4.5,
+            title: "Ghẹ Đỏ Hấp Bia Sả",
+            desc: "Ghẹ đỏ tươi rói bắt tại hồ, hấp bia sả giữ trọn vẹn vị ngọt thanh thuần khiết từ biển khơi."
+        },
+        {
+            id: 8,
+            image: "img/monan/8.png",
+            tag: "Mới",
+            rating: 5.0,
+            stars: 5,
+            title: "Sò Điệp Nướng Phô Mai",
+            desc: "Sò điệp cồi to mập mạp nướng sốt phô mai kéo sợi thơm ngậy kết hợp hành phi giòn bùi."
+        },
+        {
+            id: 9,
+            image: "img/monan/9.png",
+            tag: "Bán Chạy",
+            rating: 4.9,
+            stars: 5,
+            title: "Tôm Sú Sốt Bơ Tỏi",
+            desc: "Tôm sú lớn nướng bơ tỏi thơm lừng, thịt tôm ngọt dai đẫm sốt bơ béo ngậy."
+        },
+        {
+            id: 10,
+            image: "img/monan/10.png",
+            tag: "Đặc Sản",
+            rating: 4.9,
+            stars: 5,
+            title: "Ốc Hương Rang Muối Ớt",
+            desc: "Ốc hương tươi giòn sần sật rang cùng muối ớt cay nồng đậm vị quyến rũ."
+        },
+        {
+            id: 11,
+            image: "img/monan/11.png",
+            tag: "Mới",
+            rating: 5.0,
+            stars: 5,
+            title: "Cua Lột Chiên Giòn Sốt Me",
+            desc: "Cua lột nguyên con tẩm bột chiên giòn rụm, quyện sốt me chua ngọt đậm đà hấp dẫn."
+        },
+        {
+            id: 12,
+            image: "img/monan/12.png",
+            tag: "Đặc Sắc",
+            rating: 5.0,
+            stars: 5,
+            title: "Cá Mú Hấp Hồng Kông",
+            desc: "Cá mú đỏ tươi hấp cùng hành gừng và nước tương đặc chế chuẩn vị nhà hàng Hồng Kông."
+        }
+    ];
+
+    const featuredScrollInner = document.getElementById('featured-scroll-inner');
+    if (featuredScrollInner) {
+        featuredScrollInner.innerHTML = featuredDishes.map(dish => {
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(dish.stars)) {
+                    starsHTML += '<i class="fa-solid fa-star"></i>';
+                } else if (i === Math.ceil(dish.stars) && dish.stars % 1 !== 0) {
+                    starsHTML += '<i class="fa-regular fa-star-half-stroke"></i>';
+                } else {
+                    starsHTML += '<i class="fa-regular fa-star"></i>';
+                }
+            }
+
+            return `
+                <div class="dish-card">
+                    <div class="dish-image-container">
+                        <img src="${dish.image}" alt="${dish.title}" class="dish-img" loading="lazy">
+                        <span class="dish-tag">${dish.tag}</span>
+                    </div>
+                    <div class="dish-info">
+                        <div class="dish-rating">
+                            ${starsHTML}
+                            <span>(${dish.rating.toFixed(1)})</span>
+                        </div>
+                        <h3 class="dish-title">${dish.title}</h3>
+                        <p class="dish-desc">${dish.desc}</p>
+                        <div class="dish-footer">
+                            <a href="#contact" class="btn-dish-order-full">Đặt món ngay <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /* ==========================================
+       9. FEATURED DISHES CAROUSEL SCROLL
+       ========================================== */
+    const scrollWrapper = document.getElementById('featured-scroll-wrapper');
+    const featuredPrevBtn = document.getElementById('featured-prev');
+    const featuredNextBtn = document.getElementById('featured-next');
+    
+    if (scrollWrapper && featuredPrevBtn && featuredNextBtn) {
+        const scrollAmount = () => {
+            const firstCard = scrollWrapper.querySelector('.dish-card');
+            if (firstCard) {
+                const cardWidth = firstCard.offsetWidth;
+                const gap = parseFloat(window.getComputedStyle(scrollWrapper.querySelector('.featured-scroll-inner')).gap) || 30;
+                return cardWidth + gap;
+            }
+            return 310;
+        };
+        
+        featuredPrevBtn.addEventListener('click', () => {
+            scrollWrapper.scrollBy({
+                left: -scrollAmount(),
+                behavior: 'smooth'
+            });
+        });
+        
+        featuredNextBtn.addEventListener('click', () => {
+            scrollWrapper.scrollBy({
+                left: scrollAmount(),
+                behavior: 'smooth'
+            });
+        });
+        
+        const toggleButtons = () => {
+            const scrollLeft = scrollWrapper.scrollLeft;
+            const maxScrollLeft = scrollWrapper.scrollWidth - scrollWrapper.clientWidth;
+            
+            if (scrollLeft <= 5) {
+                featuredPrevBtn.style.opacity = '0.3';
+                featuredPrevBtn.style.pointerEvents = 'none';
+            } else {
+                featuredPrevBtn.style.opacity = '1';
+                featuredPrevBtn.style.pointerEvents = 'auto';
+            }
+            
+            if (scrollLeft >= maxScrollLeft - 5) {
+                featuredNextBtn.style.opacity = '0.3';
+                featuredNextBtn.style.pointerEvents = 'none';
+            } else {
+                featuredNextBtn.style.opacity = '1';
+                featuredNextBtn.style.pointerEvents = 'auto';
+            }
+        };
+        
+        scrollWrapper.addEventListener('scroll', toggleButtons);
+        window.addEventListener('resize', toggleButtons);
+        
+        // Initial delay to wait for rendering
+        setTimeout(toggleButtons, 500);
+    }
+
+    /* ==========================================
+       10. TESTIMONIALS COLLAGE DYNAMIC RENDER
+       ========================================== */
+    const reviewImages = [
+        "img/danhgia/danh_gia_1.png",
+        "img/danhgia/danh_gia_2.png",
+        "img/danhgia/danh_gia_3.png",
+        "img/danhgia/danh_gia_4.png",
+        "img/danhgia/danh_gia_5.png",
+        "img/danhgia/danh_gia_6.png",
+        "img/danhgia/danh_gia_7.png"
+    ];
+
+    const reviewsCollage = document.getElementById('reviews-collage');
+    if (reviewsCollage) {
+        // Shuffle the array of images to display them in a random order
+        const shuffledReviews = [...reviewImages].sort(() => Math.random() - 0.5);
+        reviewsCollage.innerHTML = shuffledReviews.map((imgSrc, index) => {
+            return `
+                <div class="review-image-card">
+                    <img src="${imgSrc}" alt="Đánh giá khách hàng Bé Biển ${index + 1}" loading="lazy">
+                </div>
+            `;
+        }).join('');
     }
 });
+
