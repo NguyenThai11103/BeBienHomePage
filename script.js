@@ -203,25 +203,46 @@ document.addEventListener('DOMContentLoaded', () => {
             const time = document.getElementById('form-time').value;
             const note = document.getElementById('form-note').value;
             
-            // Simulate server network latency (1.5 seconds)
-            setTimeout(() => {
-                // Re-enable submit button
+            // Generate a random booking code
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const bookingCode = `#BB-${randomNum}`;
+            
+            const payload = {
+                bookingCode: bookingCode,
+                name: name,
+                phone: phone,
+                guests: guests,
+                date: date,
+                time: time,
+                note: note
+            };
+
+            // URL ứng dụng web Google Apps Script của chủ quán
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbyfM6AfNxeA10k9HapWZzXYNsN8UG4cuFDkV6eVWm89qEX4YIQccDoVrLLPxkXce32YNg/exec';
+
+            // Gửi dữ liệu đặt bàn thực tế lên Google Sheets & Telegram Bot
+            fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors', // Sử dụng no-cors để tránh bị chặn bởi chính sách CORS khi redirect
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                // Mở lại nút Đặt bàn
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
                 
-                // Generate a random booking code
-                const randomNum = Math.floor(1000 + Math.random() * 9000);
-                const bookingCode = `#BB-${randomNum}`;
-                
-                // Set booking code in toast notification
+                // Hiển thị mã đặt bàn trong thông báo thành công
                 toastCode.textContent = bookingCode;
                 
-                // Open Toast Notification
+                // Mở thông báo toast thành công
                 toast.classList.add('active');
                 
-                // Reset form fields
+                // Reset form nhập liệu
                 reservationForm.reset();
-                // Reset default date & time
+                // Reset lại ngày giờ mặc định
                 if (dateInput) {
                     const today = new Date().toISOString().split('T')[0];
                     dateInput.value = today;
@@ -234,15 +255,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     timeInput.value = `${hours}:00`;
                 }
                 
-                // Clear any existing toast auto-close timeout
+                // Xoá timeout đóng toast cũ nếu có
                 clearTimeout(toastTimeout);
                 
-                // Auto-close Toast after 7 seconds
+                // Tự động đóng toast sau 7 giây
                 toastTimeout = setTimeout(() => {
                     toast.classList.remove('active');
                 }, 7000);
-                
-            }, 1500);
+            })
+            .catch((error) => {
+                console.error('Lỗi khi gửi thông tin đặt bàn:', error);
+                alert('Có lỗi xảy ra khi đăng ký đặt bàn. Vui lòng kiểm tra lại kết nối mạng hoặc liên hệ trực tiếp với chúng tôi!');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
         });
     }
     
