@@ -67,34 +67,36 @@
                         </div>
                     </div>
                     
-                    <!-- Right: Circular Rotating Showcase -->
-                    <div class="hero-showcase">
-                        <div class="showcase-glow"></div>
-                        <div class="showcase-ring"></div>
-                        
-                        <!-- 4 preview dots rotating around orbit -->
-                        <div class="showcase-dots-ring" id="hero-dots-ring">
-                            <div class="showcase-dot active" data-index="0" style="--angle: 0deg;">
-                                <div class="dot-inner" style="background-image: url('img/monan/1.jpg');"></div>
-                            </div>
-                            <div class="showcase-dot" data-index="1" style="--angle: 90deg;">
-                                <div class="dot-inner" style="background-image: url('img/monan/2.jpg');"></div>
-                            </div>
-                            <div class="showcase-dot" data-index="2" style="--angle: 180deg;">
-                                <div class="dot-inner" style="background-image: url('img/monan/3.jpg');"></div>
-                            </div>
-                            <div class="showcase-dot" data-index="3" style="--angle: 270deg;">
-                                <div class="dot-inner" style="background-image: url('img/monan/4.jpg');"></div>
-                            </div>
+                    <!-- Right: Circle radiating from top-right corner -->
+                    <div class="hero-radial" id="hero-radial">
+                        <!-- Concentric arc rings from top-right corner -->
+                        <div class="radial-ring radial-ring--1"></div>
+                        <div class="radial-ring radial-ring--2"></div>
+                        <div class="radial-ring radial-ring--3"></div>
+
+                        <!-- Ambient glow at corner -->
+                        <div class="radial-glow"></div>
+
+                        <!-- Main food circle -->
+                        <div class="radial-dish">
+                            <div class="radial-slide active" style="background-image: url('img/monan/1.jpg');"></div>
+                            <div class="radial-slide" style="background-image: url('img/monan/2.jpg');"></div>
+                            <div class="radial-slide" style="background-image: url('img/monan/3.jpg');"></div>
+                            <div class="radial-slide" style="background-image: url('img/monan/4.jpg');"></div>
+                            <div class="radial-overlay"></div>
                         </div>
-                        
-                        <!-- Central active dish circle -->
-                        <div class="showcase-main-circle">
-                            <div class="dish-item active" data-index="0" style="background-image: url('img/monan/1.jpg');"></div>
-                            <div class="dish-item" data-index="1" style="background-image: url('img/monan/2.jpg');"></div>
-                            <div class="dish-item" data-index="2" style="background-image: url('img/monan/3.jpg');"></div>
-                            <div class="dish-item" data-index="3" style="background-image: url('img/monan/4.jpg');"></div>
+
+                        <!-- Floating satellite thumbnails -->
+                        <div class="radial-sat radial-sat--1">
+                            <img src="img/monan/2.jpg" alt="Cua Hoàng Đế">
                         </div>
+                        <div class="radial-sat radial-sat--2">
+                            <img src="img/monan/3.jpg" alt="Hàu Nướng">
+                        </div>
+                        <div class="radial-sat radial-sat--3">
+                            <img src="img/monan/4.jpg" alt="Cá Hồi">
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -142,7 +144,7 @@
                     </div>
                     <div class="about-image-wrapper">
                         <div class="image-border-glow">
-                            <img src="img/template/about_chef_seafood.png" alt="Đầu bếp nhà hàng hải sản Bé Biển chuẩn bị món ăn sống động" class="about-img" loading="lazy">
+                            <img src="img/anh_be_bien.jpg" alt="Đầu bếp nhà hàng hải sản Bé Biển chuẩn bị món ăn sống động" class="about-img" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -158,102 +160,21 @@
                     <div class="divider"></div>
                 </div>
                 
-                <div class="grid grid-4 featured-grid">
-                    <!-- Card 1: Lobster -->
-                    <div class="dish-card">
-                        <div class="dish-image-container">
-                            <img src="img/monan/1.jpg" alt="Tôm hùm nướng phô mai vàng ruộm béo ngậy" class="dish-img" loading="lazy">
-                            <span class="dish-tag">Bán Chạy</span>
-                        </div>
-                        <div class="dish-info">
-                            <div class="dish-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <span>(4.9)</span>
-                            </div>
-                            <h3 class="dish-title">Tôm Hùm Nướng Phô Mai</h3>
-                            <p class="dish-desc">Tôm hùm bông tươi sống nướng sốt phô mai đút lò thơm ngậy béo mịn kiểu Pháp.</p>
-                            <div class="dish-footer">
-                                <span class="dish-price">1.250.000đ <small>/ Con</small></span>
-                                <a href="#contact" class="btn-dish-order" aria-label="Đặt món Tôm Hùm Nướng Phô Mai"><i class="fa-solid fa-circle-plus"></i></a>
-                            </div>
+                <div class="featured-carousel-container">
+                    <!-- Navigation Buttons -->
+                    <button class="carousel-control-btn prev" id="featured-prev" aria-label="Món trước">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="featured-scroll-wrapper" id="featured-scroll-wrapper">
+                        <div class="featured-scroll-inner" id="featured-scroll-inner">
+                            <!-- Populated dynamically via JavaScript -->
                         </div>
                     </div>
-
-                    <!-- Card 2: King Crab -->
-                    <div class="dish-card">
-                        <div class="dish-image-container">
-                            <img src="img/monan/2.jpg" alt="Cua Hoàng Đế sốt trứng muối vàng óng" class="dish-img" loading="lazy">
-                            <span class="dish-tag">Signature</span>
-                        </div>
-                        <div class="dish-info">
-                            <div class="dish-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <span>(5.0)</span>
-                            </div>
-                            <h3 class="dish-title">Cua Hoàng Đế Sốt Trứng Muối</h3>
-                            <p class="dish-desc">Cua Alaska khổng lồ hấp chín, phủ đẫm sốt trứng muối sánh mịn, thơm bùi đậm đà.</p>
-                            <div class="dish-footer">
-                                <span class="dish-price">2.850.000đ <small>/ Kg</small></span>
-                                <a href="#contact" class="btn-dish-order" aria-label="Đặt món Cua Hoàng Đế Sốt Trứng Muối"><i class="fa-solid fa-circle-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Oysters -->
-                    <div class="dish-card">
-                        <div class="dish-image-container">
-                            <img src="img/monan/3.jpg" alt="Hàu nướng mỡ hành thơm phức" class="dish-img" loading="lazy">
-                            <span class="dish-tag">Ưa Thích</span>
-                        </div>
-                        <div class="dish-info">
-                            <div class="dish-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star-half-stroke"></i>
-                                <span>(4.8)</span>
-                            </div>
-                            <h3 class="dish-title">Hàu Sữa Nướng Mỡ Hành</h3>
-                            <p class="dish-desc">Hàu sữa béo mọng nướng trên than hồng, xèo xèo mỡ hành thơm lừng, lạc rang giòn rụm.</p>
-                            <div class="dish-footer">
-                                <span class="dish-price">180.000đ <small>/ Đĩa 6 con</small></span>
-                                <a href="#contact" class="btn-dish-order" aria-label="Đặt món Hàu Sữa Nướng Mỡ Hành"><i class="fa-solid fa-circle-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 4: Salmon -->
-                    <div class="dish-card">
-                        <div class="dish-image-container">
-                            <img src="img/monan/4.jpg" alt="Cá hồi áp chảo sốt chanh leo đẹp mắt" class="dish-img" loading="lazy">
-                            <span class="dish-tag">Mới</span>
-                        </div>
-                        <div class="dish-info">
-                            <div class="dish-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <span>(4.9)</span>
-                            </div>
-                            <h3 class="dish-title">Cá Hồi Áp Chảo Chanh Leo</h3>
-                            <p class="dish-desc">Cá hồi Nauy áp chảo da giòn, thịt ẩm mềm quyện sốt chanh leo chua ngọt thơm mát thanh tao.</p>
-                            <div class="dish-footer">
-                                <span class="dish-price">350.000đ <small>/ Phần</small></span>
-                                <a href="#contact" class="btn-dish-order" aria-label="Đặt món Cá Hồi Áp Chảo Chanh Leo"><i class="fa-solid fa-circle-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <button class="carousel-control-btn next" id="featured-next" aria-label="Món sau">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -398,72 +319,8 @@
                     <div class="divider"></div>
                 </div>
 
-                <div class="grid grid-3 reviews-grid">
-                    <!-- Review Card 1 -->
-                    <div class="review-card">
-                        <div class="review-quote"><i class="fa-solid fa-quote-left"></i></div>
-                        <p class="review-text">
-                            "Hải sản ở Bé Biển tươi sống không có gì để bàn cãi, bơi ngay trong bể nhìn rất thích. Mình đặc biệt ấn tượng với món cua hoàng đế sốt trứng muối, nước sốt ngon chấm bánh mì tuyệt đỉnh! Không gian tông đỏ đen cực kỳ sang trọng và ấm cúng."
-                        </p>
-                        <div class="review-user">
-                            <div class="user-avatar-initial red-glow">H</div>
-                            <div class="user-info">
-                                <h4 class="user-name">Anh Hoàng Minh</h4>
-                                <span class="user-role">Doanh nhân - Khách quen</span>
-                                <div class="user-stars">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Review Card 2 -->
-                    <div class="review-card">
-                        <div class="review-quote"><i class="fa-solid fa-quote-left"></i></div>
-                        <p class="review-text">
-                            "Nhân dịp sinh nhật mình được chồng dẫn tới đây. Điểm cộng lớn nhất là nhân viên siêu chu đáo, chủ động gỡ cua, gỡ tôm hùm cho khách. Tôm hùm nướng phô mai đút lò thơm ngậy. Thiết kế màu đỏ đen rất phù hợp cho những buổi tối lãng mạn."
-                        </p>
-                        <div class="review-user">
-                            <div class="user-avatar-initial red-glow">M</div>
-                            <div class="user-info">
-                                <h4 class="user-name">Chị Thu Mai</h4>
-                                <span class="user-role">Quản lý dự án</span>
-                                <div class="user-stars">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Review Card 3 -->
-                    <div class="review-card">
-                        <div class="review-quote"><i class="fa-solid fa-quote-left"></i></div>
-                        <p class="review-text">
-                            "Lẩu hải sản Bé Biển nước dùng rất ngon ngọt chua cay vừa vị. Đồ nhúng có tôm sú, ngao và mực siêu giòn ngọt. Giá cả so với chất lượng phục vụ và vị trí đắc địa của nhà hàng là hoàn toàn xứng đáng. Sẽ còn quay lại nhiều lần cùng gia đình."
-                        </p>
-                        <div class="review-user">
-                            <div class="user-avatar-initial red-glow">V</div>
-                            <div class="user-info">
-                                <h4 class="user-name">Bác Trần Quốc Việt</h4>
-                                <span class="user-role">Hưu trí - Đà Nẵng</span>
-                                <div class="user-stars">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="reviews-collage" id="reviews-collage">
+                    <!-- Populated dynamically via JavaScript -->
                 </div>
             </div>
         </section>
@@ -602,7 +459,7 @@
                 </div>
             </div>
             <div class="footer-bottom text-center">
-                <p>&copy; 2026 Hải Sản Bé Biển. Bảo lưu mọi quyền. Thiết kế bởi Antigravity.</p>
+                <p>&copy; 2026 Hải Sản Bé Biển</p>
             </div>
         </div>
     </footer>

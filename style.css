@@ -57,6 +57,7 @@ body {
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
+    text-align: justify;
 }
 
 a {
@@ -410,164 +411,177 @@ input, select, textarea, button {
     gap: 20px;
 }
 
-/* Redesigned Hero Showcase (Rotating Dish Carousel) */
-.hero-showcase {
+/* ---- Hero Radial: Circle from Top-Right Corner ---- */
+.hero-radial {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 440px; /* Compact width to shift center point right */
-    height: 500px;
-    margin-left: auto; /* Push showcase to the far right of the column */
-    animation: fadeInUp 1s ease forwards 0.2s;
+    width: 100%;
+    height: 540px;
+    overflow: visible;
+    animation: fadeInUp 1s ease forwards 0.3s;
     opacity: 0;
 }
 
-.showcase-glow {
+/* All rings share the same origin: centered vertically on the right */
+.radial-ring {
     position: absolute;
-    width: 380px;
-    height: 380px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--glow-red-heavy) 0%, transparent 70%);
-    opacity: 0.3;
-    filter: blur(25px);
+    top: 50%;
+    right: 0;
+    transform: translate(35%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.radial-ring--1 {
+    width: 520px;
+    height: 520px;
+    border: 2.5px solid rgba(184, 151, 90, 0.25);
+    animation: arcPulse 3s ease-in-out infinite alternate;
+}
+
+.radial-ring--2 {
+    width: 700px;
+    height: 700px;
+    border: 1.5px dashed rgba(184, 151, 90, 0.15);
+    animation: arcPulse 4s ease-in-out infinite alternate-reverse;
+}
+
+.radial-ring--3 {
+    width: 920px;
+    height: 920px;
+    border: 1px dotted rgba(184, 151, 90, 0.08);
+    animation: arcPulse 5s ease-in-out infinite alternate;
+}
+
+/* Glow centered vertically on the right */
+.radial-glow {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    transform: translate(35%, -50%);
+    background: radial-gradient(circle, rgba(14, 116, 144, 0.2) 0%, rgba(184, 151, 90, 0.06) 45%, transparent 70%);
+    filter: blur(60px);
     pointer-events: none;
     z-index: 0;
+    animation: glowBreath 4s ease-in-out infinite alternate;
 }
 
-.showcase-ring {
+/* ---- Main Food Circle (anchored at center-right) ---- */
+.radial-dish {
     position: absolute;
-    width: 420px;
-    height: 420px;
+    top: 50%;
+    right: 0;
+    width: 460px;
+    height: 460px;
     border-radius: 50%;
-    border: 1px dashed rgba(255, 59, 75, 0.25);
-    z-index: 1;
-    animation: rotateClockwise 35s infinite linear;
-    pointer-events: none;
-}
-
-.showcase-dots-ring {
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    z-index: 2;
-    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-
-.showcase-dot {
-    position: absolute;
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background-color: var(--bg-card);
-    border: 2px solid var(--border-color);
     overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    transform: translate(15%, -50%);
+    z-index: 5;
+    border: 5px solid rgba(184, 151, 90, 0.45);
+    box-shadow:
+        0 20px 60px rgba(15, 23, 42, 0.15),
+        0 0 40px rgba(184, 151, 90, 0.15),
+        inset 0 0 50px rgba(0, 0, 0, 0.35);
+    transition: box-shadow 0.5s ease, transform 0.5s ease;
 }
 
-/* Orbit position of preview dots */
-.showcase-dot[data-index="0"] {
-    top: -36px;
-    left: calc(50% - 36px);
-}
-.showcase-dot[data-index="1"] {
-    top: calc(50% - 36px);
-    right: -36px;
-}
-.showcase-dot[data-index="2"] {
-    bottom: -36px;
-    left: calc(50% - 36px);
-}
-.showcase-dot[data-index="3"] {
-    top: calc(50% - 36px);
-    left: -36px;
+.radial-dish:hover {
+    box-shadow:
+        0 25px 75px rgba(15, 23, 42, 0.22),
+        0 0 50px rgba(184, 151, 90, 0.3),
+        inset 0 0 50px rgba(0, 0, 0, 0.35);
+    transform: translate(15%, -50%) scale(1.03);
 }
 
-.showcase-dot .dot-inner {
-    width: 100%;
-    height: 100%;
+/* Food slide images */
+.radial-slide {
+    position: absolute;
+    inset: 0;
     background-size: cover;
     background-position: center;
-    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+    opacity: 0;
+    transform: scale(1.12);
+    transition: opacity 1.2s ease, transform 1.5s ease;
+    z-index: 1;
 }
 
-.showcase-dot:hover .dot-inner {
-    transform: scale(1.15);
+.radial-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 2;
 }
 
-.showcase-dot.active {
-    border-color: var(--primary-red);
-    box-shadow: 0 0 15px var(--glow-red-heavy);
-}
-
-.showcase-main-circle {
+/* Gradient overlay */
+.radial-overlay {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    inset: 0;
     border-radius: 50%;
-    background-color: var(--bg-card);
-    border: 5px solid var(--border-color);
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8);
-    overflow: hidden;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, transparent 30%, rgba(0, 0, 0, 0.45) 100%);
+    pointer-events: none;
     z-index: 3;
 }
 
-.showcase-main-circle::after {
-    content: '';
+/* ---- Satellite Thumbnails ---- */
+.radial-sat {
     position: absolute;
-    top: 0;
-    left: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 6;
+    border: 3px solid rgba(255, 59, 75, 0.45);
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.7),
+        0 0 12px rgba(255, 59, 75, 0.1);
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease, box-shadow 0.4s ease;
+}
+
+.radial-sat img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
-    pointer-events: none;
-    z-index: 2;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-.dish-item {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(0.8) rotate(-90deg);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    z-index: 1;
+.radial-sat:hover {
+    border-color: var(--primary-red);
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.18),
+        0 0 25px rgba(14, 116, 144, 0.4);
+    transform: scale(1.18) !important;
 }
 
-.dish-item.active {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-    z-index: 2;
+.radial-sat:hover img {
+    transform: scale(1.12);
 }
 
-.showcase-details-badge {
-    position: absolute;
-    bottom: 125px; /* Shifted up to overlay on the main circle's bottom edge and completely clear the bottom preview dot */
-    z-index: 4;
-    background: rgba(29, 29, 29, 0.92); /* Lightened details badge background */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--border-color);
-    padding: 8px 22px;
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px var(--glow-red);
-    text-align: center;
+/* Positions along the arc paths - Adjusted to prevent overlapping the large circle */
+.radial-sat--1 {
+    width: 80px;
+    height: 80px;
+    top: 52%;
+    right: 72%; /* Pushed left from 55% */
+    animation: satBob1 5s ease-in-out infinite;
 }
 
-.showcase-details-badge span {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    display: inline-block;
-    transition: opacity 0.3s ease;
+.radial-sat--2 {
+    width: 65px;
+    height: 65px;
+    top: 15%;
+    right: 60%; /* Pushed left from 68% for better balance */
+    animation: satBob2 6s ease-in-out infinite 0.5s;
 }
+
+.radial-sat--3 {
+    width: 55px;
+    height: 55px;
+    top: 78%;
+    right: 50%; /* Pushed left from 35% */
+    animation: satBob3 5.5s ease-in-out infinite 1s;
+}
+
 
 /* Scroll down mouse animation */
 .scroll-down {
@@ -723,6 +737,74 @@ input, select, textarea, button {
     background-color: var(--bg-main);
 }
 
+.featured-carousel-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.featured-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    padding: 20px 4px;
+}
+
+.featured-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+.featured-scroll-inner {
+    display: flex;
+    gap: 30px;
+    align-items: stretch; /* Stretch all cards to have the same height */
+}
+
+.featured-scroll-inner .dish-card {
+    flex: 0 0 calc(25% - 22.5px); /* 4 items per viewport on desktop */
+    min-width: 280px;
+    scroll-snap-align: start;
+}
+
+/* Carousel Control Buttons */
+.carousel-control-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 59, 75, 0.3);
+    color: var(--text-pure);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-control-btn:hover {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    box-shadow: 0 0 15px var(--glow-red);
+}
+
+.carousel-control-btn.prev {
+    left: -24px;
+}
+
+.carousel-control-btn.next {
+    right: -24px;
+}
+
 .dish-card {
     background-color: var(--bg-card);
     border-radius: 8px;
@@ -730,7 +812,7 @@ input, select, textarea, button {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* Height is set by flexbox stretch from the parent container */
     transition: var(--transition-normal);
 }
 
@@ -807,43 +889,36 @@ input, select, textarea, button {
 
 .dish-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: auto;
 }
 
-.dish-price {
-    font-family: var(--font-nav);
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--primary-red);
-}
-
-.dish-price small {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-.btn-dish-order {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 42, 58, 0.08);
-    border: 1px solid rgba(255, 42, 58, 0.2);
-    display: flex;
+.btn-dish-order-full {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    background-color: rgba(255, 42, 58, 0.08);
+    border: 1px solid rgba(255, 42, 58, 0.25);
     color: var(--primary-red);
-    font-size: 18px;
+    font-family: var(--font-nav);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: var(--transition-normal);
 }
 
-.btn-dish-order:hover {
+.btn-dish-order-full:hover {
     background-color: var(--primary-red);
     color: var(--text-pure);
-    box-shadow: 0 0 15px var(--glow-red-heavy);
-    transform: scale(1.1);
+    border-color: var(--primary-red);
+    box-shadow: 0 4px 15px var(--glow-red);
+    transform: translateY(-2px);
 }
 
 /* Card Hover Animation */
@@ -1131,6 +1206,7 @@ input, select, textarea, button {
 .testimonials-section {
     background-color: var(--bg-main);
     position: relative;
+    overflow: hidden;
 }
 
 .testimonials-section::before {
@@ -1143,6 +1219,105 @@ input, select, textarea, button {
     left: -100px;
     opacity: 0.18;
     pointer-events: none;
+}
+
+/* Reviews Collage Grid Layout */
+.reviews-collage {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 45px 30px;
+    padding: 40px 0 65px 0;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.review-image-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                z-index 0.1s ease;
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.review-image-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Messy / staggered layout using nth-child */
+.review-image-card:nth-child(1) {
+    transform: rotate(-4.5deg) translateY(-20px) translateX(-6px);
+}
+.review-image-card:nth-child(2) {
+    transform: rotate(3deg) translateY(15px) translateX(8px);
+}
+.review-image-card:nth-child(3) {
+    transform: rotate(-2.5deg) translateY(-10px) translateX(-12px);
+}
+.review-image-card:nth-child(4) {
+    transform: rotate(5deg) translateY(-25px) translateX(6px);
+}
+.review-image-card:nth-child(5) {
+    transform: rotate(-3.5deg) translateY(18px) translateX(-8px);
+}
+.review-image-card:nth-child(6) {
+    transform: rotate(2.5deg) translateY(-12px) translateX(10px);
+}
+.review-image-card:nth-child(7) {
+    transform: rotate(-5deg) translateY(22px) translateX(-4px);
+}
+.review-image-card:nth-child(8) {
+    transform: rotate(4deg) translateY(-18px) translateX(8px);
+}
+
+/* Hover effects */
+.review-image-card:hover {
+    transform: scale(1.05) rotate(0deg) translateY(0) !important;
+    z-index: 5;
+    box-shadow: 0 15px 35px rgba(255, 59, 75, 0.3);
+}
+
+/* Responsive styles for reviews collage */
+@media (max-width: 1024px) {
+    .reviews-collage {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px 25px;
+    }
+}
+
+@media (max-width: 576px) {
+    .reviews-collage {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 20px 0;
+    }
+    
+    .review-image-card {
+        max-width: 340px;
+        margin: 0 auto;
+    }
+    
+    /* Reduce translation and rotation on mobile for better reading */
+    .review-image-card:nth-child(n) {
+        transform: rotate(0deg) translateY(0);
+    }
+    .review-image-card:nth-child(odd) {
+        transform: rotate(-1deg) translateY(2px);
+    }
+    .review-image-card:nth-child(even) {
+        transform: rotate(1deg) translateY(-2px);
+    }
 }
 
 .review-card {
@@ -1274,15 +1449,17 @@ input, select, textarea, button {
 .map-placeholder {
     margin-top: 40px;
     height: 200px;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
-    background-color: var(--bg-card);
+    background-color: var(--bg-section);
+    background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1.2px, transparent 1.2px);
+    background-size: 20px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
     transition: var(--transition-normal);
 }
 
@@ -1290,7 +1467,7 @@ input, select, textarea, button {
     position: absolute;
     width: 150%;
     height: 150%;
-    background: radial-gradient(circle, rgba(255, 42, 58, 0.06) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(14, 116, 144, 0.05) 0%, transparent 60%);
     animation: radarSweep 6s infinite linear;
 }
 
@@ -1301,19 +1478,19 @@ input, select, textarea, button {
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    color: var(--text-muted);
+    color: var(--text-pure);
     font-size: 14px;
 }
 
 .map-pin {
     font-size: 36px;
     color: var(--primary-red);
-    filter: drop-shadow(0 0 10px var(--primary-red));
+    filter: drop-shadow(0 0 10px rgba(14, 116, 144, 0.4));
 }
 
 .map-placeholder:hover {
-    border-color: rgba(255, 42, 58, 0.4);
-    box-shadow: 0 10px 30px var(--glow-red);
+    border-color: var(--primary-red);
+    box-shadow: 0 10px 30px rgba(14, 116, 144, 0.15), 0 0 15px rgba(184, 151, 90, 0.05);
 }
 
 /* Pulse animation for map pin */
@@ -1325,9 +1502,9 @@ input, select, textarea, button {
 .reservation-form-container {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 16px;
     padding: 45px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.05), 0 0 30px rgba(184, 151, 90, 0.04);
     position: relative;
     overflow: hidden;
 }
@@ -1386,9 +1563,9 @@ input, select, textarea, button {
 .form-group select, 
 .form-group textarea {
     width: 100%;
-    background-color: rgba(29, 29, 29, 0.4); /* Lightened form input backgrounds */
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    background-color: #faf9f6;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 8px;
     padding: 12px 16px;
     color: var(--text-pure);
     font-size: 14px;
@@ -1397,7 +1574,7 @@ input, select, textarea, button {
 
 .form-group input::placeholder, 
 .form-group textarea::placeholder {
-    color: #555555;
+    color: #94a3b8;
 }
 
 .form-group select option {
@@ -1409,15 +1586,20 @@ input, select, textarea, button {
 .form-group select:focus, 
 .form-group textarea:focus {
     border-color: var(--primary-red);
-    box-shadow: 0 0 8px rgba(255, 42, 58, 0.2);
-    background-color: rgba(15, 15, 15, 0.7); /* Lightened input focus state */
+    box-shadow: 0 0 8px rgba(14, 116, 144, 0.15);
+    background-color: #ffffff;
 }
 
-/* Form date and time styles for dark theme */
+/* Form date and time styles for light theme */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(330deg);
     cursor: pointer;
+    opacity: 0.6;
+    transition: var(--transition-fast);
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
 }
 
 /* -------------------------------------------------------------
@@ -1430,7 +1612,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .footer-grid {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
     padding-bottom: 50px;
     margin-bottom: 30px;
 }
@@ -1467,7 +1649,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .social-links a:hover {
     border-color: var(--primary-red);
     background-color: var(--primary-red);
-    color: var(--text-pure);
+    color: var(--text-on-accent);
     box-shadow: 0 0 12px var(--glow-red-heavy);
     transform: translateY(-3px);
 }
@@ -1659,6 +1841,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     .hero-title {
         font-size: 50px;
     }
+    
+    .featured-scroll-inner .dish-card {
+        flex: 0 0 calc(33.333% - 20px);
+    }
+    
+    .carousel-control-btn.prev {
+        left: -10px;
+    }
+    
+    .carousel-control-btn.next {
+        right: -10px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1686,6 +1880,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         margin: 0 auto 25px auto;
         background: linear-gradient(90deg, transparent, var(--primary-red), transparent);
         width: 80px;
+    }
+    
+    .featured-scroll-inner .dish-card {
+        flex: 0 0 calc(50% - 15px);
+    }
+    
+    .carousel-control-btn {
+        display: none;
     }
     .contact-details .paragraph {
         text-align: center;
@@ -1768,61 +1970,45 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         margin: 0 auto 30px auto;
     }
 
-    .hero-showcase {
-        height: 380px;
-        width: 320px;
+    .hero-radial {
+        height: 340px;
         margin: 0 auto;
     }
     
-    .showcase-glow {
-        width: 280px;
-        height: 280px;
+    .radial-dish {
+        width: 320px;
+        height: 320px;
+        transform: translate(40%, -20%);
     }
     
-    .showcase-ring {
-        width: 310px;
-        height: 310px;
+    .radial-glow {
+        width: 400px;
+        height: 400px;
     }
     
-    .showcase-dots-ring {
-        width: 310px;
-        height: 310px;
+    .radial-ring--1 { width: 380px; height: 380px; }
+    .radial-ring--2 { width: 520px; height: 520px; }
+    .radial-ring--3 { width: 680px; height: 680px; }
+    
+    .radial-sat--1 {
+        width: 55px;
+        height: 55px;
+        top: 50%;
+        right: 48%;
     }
     
-    .showcase-dot {
-        width: 56px;
-        height: 56px;
+    .radial-sat--2 {
+        width: 45px;
+        height: 45px;
+        top: 12%;
+        right: 58%;
     }
     
-    .showcase-dot[data-index="0"] {
-        top: -28px;
-        left: calc(50% - 28px);
-    }
-    .showcase-dot[data-index="1"] {
-        top: calc(50% - 28px);
-        right: -28px;
-    }
-    .showcase-dot[data-index="2"] {
-        bottom: -28px;
-        left: calc(50% - 28px);
-    }
-    .showcase-dot[data-index="3"] {
-        top: calc(50% - 28px);
-        left: -28px;
-    }
-    
-    .showcase-main-circle {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .showcase-details-badge {
-        bottom: 100px; /* Shifted up on mobile to completely clear the bottom dot */
-        padding: 6px 18px;
-    }
-    
-    .showcase-details-badge span {
-        font-size: 12px;
+    .radial-sat--3 {
+        width: 42px;
+        height: 42px;
+        top: 72%;
+        right: 28%;
     }
 
     /* Menu layout */
@@ -1860,6 +2046,17 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     .menu-tab-btn {
         padding: 8px 16px;
         font-size: 11px;
+    }
+    
+    .featured-scroll-inner .dish-card {
+        flex: 0 0 85%;
+    }
+    .featured-scroll-inner {
+        gap: 20px;
+    }
+    .featured-scroll-wrapper {
+        padding-left: 10px;
+        padding-right: 10px;
     }
     
     /* Native-like bottom success toast on mobile */
