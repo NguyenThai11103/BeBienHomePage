@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // URL ứng dụng web Google Apps Script của chủ quán
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbyfM6AfNxeA10k9HapWZzXYNsN8UG4cuFDkV6eVWm89qEX4YIQccDoVrLLPxkXce32YNg/exec';
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbzABW39jdgEuSeZD6fTVJUWOgB_cQPF9gxyQiwlQmqqVoq6Z_yl1MHmGg6h9VRHS6nNag/exec';
 
             // Gửi dữ liệu đặt bàn thực tế lên Google Sheets & Telegram Bot
             fetch(webAppUrl, {
@@ -283,47 +283,33 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================
        7. HERO RADIAL SHOWCASE AUTO-ROTATE
        ========================================== */
-    const radialSlides = document.querySelectorAll('.radial-slide');
-    const radialDishName = document.getElementById('radial-dish-name');
-    
-    const radialDishNames = [
-        "Tôm Hùm Nướng Phô Mai",
-        "Cua Hoàng Đế Trứng Muối",
-        "Hàu Sữa Nướng Mỡ Hành",
-        "Cá Hồi Sốt Chanh Leo"
-    ];
-    
+    const radialSats = document.querySelectorAll('.radial-sat');
     let radialActiveIndex = 0;
     
-    function switchRadialSlide(index) {
-        radialSlides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
+    function switchRadialActive(index) {
+        radialSats.forEach((sat, i) => {
+            sat.classList.toggle('active', i === index);
         });
+    }
+    
+    if (radialSats.length > 0) {
+        // Set first item as active initially
+        switchRadialActive(0);
         
-        if (radialDishName) {
-            radialDishName.style.opacity = '0';
-            setTimeout(() => {
-                radialDishName.textContent = radialDishNames[index];
-                radialDishName.style.opacity = '1';
-            }, 300);
-        }
-    }
-    
-    if (radialSlides.length > 0) {
+        // Automatically switch active highlight every 4 seconds
         setInterval(() => {
-            radialActiveIndex = (radialActiveIndex + 1) % radialSlides.length;
-            switchRadialSlide(radialActiveIndex);
+            radialActiveIndex = (radialActiveIndex + 1) % radialSats.length;
+            switchRadialActive(radialActiveIndex);
         }, 4000);
-    }
-    
-    // Click satellite thumbnails to switch
-    const radialSats = document.querySelectorAll('.radial-sat');
-    radialSats.forEach((sat, i) => {
-        sat.addEventListener('click', () => {
-            radialActiveIndex = i + 1; // sats are for images 2, 3, 4
-            switchRadialSlide(radialActiveIndex);
+        
+        // Add click listener to satellites
+        radialSats.forEach((sat, i) => {
+            sat.addEventListener('click', () => {
+                radialActiveIndex = i;
+                switchRadialActive(radialActiveIndex);
+            });
         });
-    });
+    }
     /* ==========================================
        8. FEATURED DISHES DATA & DYNAMIC RENDER
        ========================================== */

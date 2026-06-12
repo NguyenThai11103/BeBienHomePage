@@ -1,0 +1,11 @@
+# ==========================================
+# Secret / Config files — KHÔNG commit lên git
+# ==========================================
+config.secret.js
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db

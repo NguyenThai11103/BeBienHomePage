@@ -34,6 +34,10 @@
     --transition-slow: 0.5s ease;
     --max-width: 1200px;
     --header-height: 80px;
+    /* orbit(560px): center = right_edge - 560 + T + 280 = right_edge - 0
+       → T = 280px; logo(160px) → logo_T = 160/2 = 80px */
+    --radial-translate: translate(280px, -50%);
+    --logo-translate: translate(80px, -50%);
 }
 
 /* -------------------------------------------------------------
@@ -427,30 +431,30 @@ input, select, textarea, button {
     border-radius: 50%;
     top: 50%;
     right: 0;
-    transform: translate(35%, -50%);
+    transform: var(--radial-translate);
     pointer-events: none;
     z-index: 1;
 }
 
 .radial-ring--1 {
-    width: 520px;
-    height: 520px;
+    width: 420px;
+    height: 420px;
     border: 2.5px solid rgba(184, 151, 90, 0.25);
     animation: arcPulse 3s ease-in-out infinite alternate;
 }
 
 .radial-ring--2 {
-    width: 700px;
-    height: 700px;
+    width: 560px;
+    height: 560px;
     border: 1.5px dashed rgba(184, 151, 90, 0.15);
-    animation: arcPulse 4s ease-in-out infinite alternate-reverse;
+    animation: ring2Anim 45s linear infinite;
 }
 
 .radial-ring--3 {
-    width: 920px;
-    height: 920px;
+    width: 720px;
+    height: 720px;
     border: 1px dotted rgba(184, 151, 90, 0.08);
-    animation: arcPulse 5s ease-in-out infinite alternate;
+    animation: ring3Anim 60s linear infinite;
 }
 
 /* Glow centered vertically on the right */
@@ -458,10 +462,10 @@ input, select, textarea, button {
     position: absolute;
     top: 50%;
     right: 0;
-    width: 600px;
-    height: 600px;
+    width: 460px;
+    height: 460px;
     border-radius: 50%;
-    transform: translate(35%, -50%);
+    transform: var(--radial-translate);
     background: radial-gradient(circle, rgba(14, 116, 144, 0.2) 0%, rgba(184, 151, 90, 0.06) 45%, transparent 70%);
     filter: blur(60px);
     pointer-events: none;
@@ -469,73 +473,84 @@ input, select, textarea, button {
     animation: glowBreath 4s ease-in-out infinite alternate;
 }
 
-/* ---- Main Food Circle (anchored at center-right) ---- */
-.radial-dish {
+/* ---- Central Logo Emblem ---- */
+.radial-center-logo {
     position: absolute;
     top: 50%;
     right: 0;
-    width: 460px;
-    height: 460px;
-    border-radius: 50%;
-    overflow: hidden;
-    transform: translate(15%, -50%);
-    z-index: 5;
-    border: 5px solid rgba(184, 151, 90, 0.45);
-    box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.15),
-        0 0 40px rgba(184, 151, 90, 0.15),
-        inset 0 0 50px rgba(0, 0, 0, 0.35);
-    transition: box-shadow 0.5s ease, transform 0.5s ease;
-}
-
-.radial-dish:hover {
-    box-shadow:
-        0 25px 75px rgba(15, 23, 42, 0.22),
-        0 0 50px rgba(184, 151, 90, 0.3),
-        inset 0 0 50px rgba(0, 0, 0, 0.35);
-    transform: translate(15%, -50%) scale(1.03);
-}
-
-/* Food slide images */
-.radial-slide {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transform: scale(1.12);
-    transition: opacity 1.2s ease, transform 1.5s ease;
-    z-index: 1;
-}
-
-.radial-slide.active {
-    opacity: 1;
-    transform: scale(1);
-    z-index: 2;
-}
-
-/* Gradient overlay */
-.radial-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, transparent 30%, rgba(0, 0, 0, 0.45) 100%);
+    width: 160px;
+    height: 160px;
+    transform: var(--logo-translate);
+    z-index: 7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
-    z-index: 3;
 }
 
-/* ---- Satellite Thumbnails ---- */
-.radial-sat {
+.radial-center-logo img {
+    width: 80%;
+    height: auto;
+    filter: drop-shadow(0 0 12px var(--glow-red-heavy));
+    animation: emblemPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes emblemPulse {
+    0% {
+        transform: scale(0.95);
+        filter: drop-shadow(0 0 6px var(--glow-red));
+    }
+    100% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 15px var(--glow-red-heavy));
+    }
+}
+
+/* ---- Orbiting Container & Items ---- */
+.orbit-container {
     position: absolute;
+    top: 50%;
+    right: 0;
+    width: 560px;
+    height: 560px;
+    transform: var(--radial-translate);
+    animation: orbit 40s linear infinite;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.orbit-item {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: counter-orbit 40s linear infinite;
+}
+
+/* Radius = 280px, item_half = 70px */
+.orbit-item--1 { top: -70px;  left: 210px; }
+.orbit-item--2 { top: 210px;  left: 490px; }
+.orbit-item--3 { top: 490px;  left: 210px; }
+.orbit-item--4 { top: 210px;  left: -70px; }
+
+/* ---- Satellite Thumbnails (now orbiting) ---- */
+.radial-sat {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     overflow: hidden;
     z-index: 6;
-    border: 3px solid rgba(255, 59, 75, 0.45);
+    border: 4px solid rgba(255, 59, 75, 0.35);
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.7),
-        0 0 12px rgba(255, 59, 75, 0.1);
+        0 10px 30px rgba(0, 0, 0, 0.7),
+        0 0 15px rgba(255, 59, 75, 0.1);
     cursor: pointer;
+    pointer-events: auto; /* Enable hover/click */
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease, box-shadow 0.4s ease;
+    background-color: var(--bg-card);
 }
 
 .radial-sat img {
@@ -548,38 +563,31 @@ input, select, textarea, button {
 .radial-sat:hover {
     border-color: var(--primary-red);
     box-shadow:
-        0 12px 30px rgba(15, 23, 42, 0.18),
-        0 0 25px rgba(14, 116, 144, 0.4);
-    transform: scale(1.18) !important;
+        0 15px 35px rgba(0, 0, 0, 0.8),
+        0 0 30px var(--glow-red-heavy);
+    transform: scale(1.18);
 }
 
 .radial-sat:hover img {
     transform: scale(1.12);
 }
 
-/* Positions along the arc paths - Adjusted to prevent overlapping the large circle */
-.radial-sat--1 {
-    width: 80px;
-    height: 80px;
-    top: 52%;
-    right: 72%; /* Pushed left from 55% */
-    animation: satBob1 5s ease-in-out infinite;
+/* Active Satellite Style matching current slide */
+.radial-sat.active {
+    border-color: var(--primary-red);
+    box-shadow: 
+        0 0 30px var(--glow-red-heavy), 
+        0 0 15px var(--primary-red),
+        0 15px 40px rgba(0, 0, 0, 0.8);
+    transform: scale(1.12);
 }
 
-.radial-sat--2 {
-    width: 65px;
-    height: 65px;
-    top: 15%;
-    right: 60%; /* Pushed left from 68% for better balance */
-    animation: satBob2 6s ease-in-out infinite 0.5s;
+.radial-sat.active img {
+    transform: scale(1.05);
 }
 
-.radial-sat--3 {
-    width: 55px;
-    height: 55px;
-    top: 78%;
-    right: 50%; /* Pushed left from 35% */
-    animation: satBob3 5.5s ease-in-out infinite 1s;
+.radial-sat.active:hover {
+    transform: scale(1.22);
 }
 
 
@@ -1445,57 +1453,35 @@ input, select, textarea, button {
     font-size: 14px;
 }
 
-/* Styled Map Placeholder */
+/* Styled Map */
 .map-placeholder {
     margin-top: 40px;
-    height: 200px;
+    height: 280px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
     background-color: var(--bg-section);
-    background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1.2px, transparent 1.2px);
-    background-size: 20px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     transition: var(--transition-normal);
 }
 
-.map-glow-layer {
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(14, 116, 144, 0.05) 0%, transparent 60%);
-    animation: radarSweep 6s infinite linear;
+.map-placeholder iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    filter: grayscale(10%) invert(90%) hue-rotate(180deg);
+    transition: filter 0.5s ease;
 }
 
-.map-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    color: var(--text-pure);
-    font-size: 14px;
-}
-
-.map-pin {
-    font-size: 36px;
-    color: var(--primary-red);
-    filter: drop-shadow(0 0 10px rgba(14, 116, 144, 0.4));
+.map-placeholder:hover iframe {
+    filter: none;
 }
 
 .map-placeholder:hover {
     border-color: var(--primary-red);
-    box-shadow: 0 10px 30px rgba(14, 116, 144, 0.15), 0 0 15px rgba(184, 151, 90, 0.05);
-}
-
-/* Pulse animation for map pin */
-.red-pulse {
-    animation: redPulse 1.5s infinite alternate;
+    box-shadow: 0 10px 30px var(--glow-red-heavy);
 }
 
 /* Reservation Form Card */
@@ -1829,6 +1815,77 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     }
 }
 
+/* Hero Radial Showcase Animations */
+@keyframes orbit {
+    0% {
+        transform: var(--radial-translate) rotate(0deg);
+    }
+    100% {
+        transform: var(--radial-translate) rotate(360deg);
+    }
+}
+
+@keyframes counter-orbit {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes arcPulse {
+    0% {
+        transform: var(--radial-translate) scale(0.97);
+        opacity: 0.6;
+    }
+    100% {
+        transform: var(--radial-translate) scale(1.03);
+        opacity: 0.95;
+    }
+}
+
+@keyframes glowBreath {
+    0% {
+        transform: var(--radial-translate) scale(0.92);
+        opacity: 0.12;
+    }
+    100% {
+        transform: var(--radial-translate) scale(1.08);
+        opacity: 0.28;
+    }
+}
+
+@keyframes ring2Anim {
+    0% {
+        transform: var(--radial-translate) rotate(0deg) scale(0.98);
+        opacity: 0.5;
+    }
+    50% {
+        transform: var(--radial-translate) rotate(-180deg) scale(1.02);
+        opacity: 0.8;
+    }
+    100% {
+        transform: var(--radial-translate) rotate(-360deg) scale(0.98);
+        opacity: 0.5;
+    }
+}
+
+@keyframes ring3Anim {
+    0% {
+        transform: var(--radial-translate) rotate(0deg) scale(1.02);
+        opacity: 0.4;
+    }
+    50% {
+        transform: var(--radial-translate) rotate(180deg) scale(0.98);
+        opacity: 0.7;
+    }
+    100% {
+        transform: var(--radial-translate) rotate(360deg) scale(1.02);
+        opacity: 0.4;
+    }
+}
+
 /* -------------------------------------------------------------
    RESPONSIVE DESIGN BREAKPOINTS
 ------------------------------------------------------------- */
@@ -1854,11 +1911,20 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     .carousel-control-btn.next {
         right: -10px;
     }
+    
+    /* Scale orbit system down on tablet */
+    .hero-radial {
+        transform: scale(0.82);
+        transform-origin: center center;
+        margin-top: -50px;
+        margin-bottom: -50px;
+    }
 }
 
 @media (max-width: 768px) {
     :root {
         --header-height: 70px;
+        --radial-translate: translate(140px, -50%);
     }
     
     .section-padding {
@@ -1972,44 +2038,18 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     }
 
     .hero-radial {
-        height: 340px;
+        height: 420px;
         margin: 0 auto;
+        /* Scale the entire orbit system down — keeps all alignment intact */
+        transform-origin: center center;
+        transform: scale(0.68);
+        margin-top: -60px;
+        margin-bottom: -60px;
     }
-    
-    .radial-dish {
-        width: 320px;
-        height: 320px;
-        transform: translate(40%, -20%);
-    }
-    
-    .radial-glow {
-        width: 400px;
-        height: 400px;
-    }
-    
-    .radial-ring--1 { width: 380px; height: 380px; }
-    .radial-ring--2 { width: 520px; height: 520px; }
-    .radial-ring--3 { width: 680px; height: 680px; }
-    
-    .radial-sat--1 {
-        width: 55px;
-        height: 55px;
-        top: 50%;
-        right: 48%;
-    }
-    
-    .radial-sat--2 {
-        width: 45px;
-        height: 45px;
-        top: 12%;
-        right: 58%;
-    }
-    
-    .radial-sat--3 {
-        width: 42px;
-        height: 42px;
-        top: 72%;
-        right: 28%;
+
+    /* Update logo translate for mobile --radial-translate = translate(140px, -50%) */
+    .radial-center-logo {
+        transform: translate(-20px, -50%);
     }
 
     /* Menu layout */

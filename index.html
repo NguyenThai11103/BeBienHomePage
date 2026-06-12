@@ -69,32 +69,37 @@
                     
                     <!-- Right: Circle radiating from top-right corner -->
                     <div class="hero-radial" id="hero-radial">
-                        <!-- Concentric arc rings from top-right corner -->
-                        <div class="radial-ring radial-ring--1"></div>
-                        <div class="radial-ring radial-ring--2"></div>
-                        <div class="radial-ring radial-ring--3"></div>
 
                         <!-- Ambient glow at corner -->
                         <div class="radial-glow"></div>
 
-                        <!-- Main food circle -->
-                        <div class="radial-dish">
-                            <div class="radial-slide active" style="background-image: url('img/monan/1.jpg');"></div>
-                            <div class="radial-slide" style="background-image: url('img/monan/2.jpg');"></div>
-                            <div class="radial-slide" style="background-image: url('img/monan/3.jpg');"></div>
-                            <div class="radial-slide" style="background-image: url('img/monan/4.jpg');"></div>
-                            <div class="radial-overlay"></div>
+                        <!-- Central Emblem/Logo -->
+                        <div class="radial-center-logo">
+                            <img src="img/logo/logo.png" alt="Bé Biển Emblem">
                         </div>
 
-                        <!-- Floating satellite thumbnails -->
-                        <div class="radial-sat radial-sat--1">
-                            <img src="img/monan/2.jpg" alt="Cua Hoàng Đế">
-                        </div>
-                        <div class="radial-sat radial-sat--2">
-                            <img src="img/monan/3.jpg" alt="Hàu Nướng">
-                        </div>
-                        <div class="radial-sat radial-sat--3">
-                            <img src="img/monan/4.jpg" alt="Cá Hồi">
+                        <!-- Orbiting Dishes Container -->
+                        <div class="orbit-container">
+                            <div class="orbit-item orbit-item--1">
+                                <div class="radial-sat active">
+                                    <img src="img/monan/1.jpg" alt="Tôm Hùm Nướng Phô Mai">
+                                </div>
+                            </div>
+                            <div class="orbit-item orbit-item--2">
+                                <div class="radial-sat">
+                                    <img src="img/monan/2.jpg" alt="Cua Hoàng Đế Trứng Muối">
+                                </div>
+                            </div>
+                            <div class="orbit-item orbit-item--3">
+                                <div class="radial-sat">
+                                    <img src="img/monan/3.jpg" alt="Hàu Sữa Nướng Mỡ Hành">
+                                </div>
+                            </div>
+                            <div class="orbit-item orbit-item--4">
+                                <div class="radial-sat">
+                                    <img src="img/monan/4.jpg" alt="Cá Hồi Sốt Chanh Leo">
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -363,13 +368,17 @@
                             </div>
                         </div>
 
-                        <!-- Dark Styled Map Placeholder -->
+                        <!-- Google Map Embedded -->
                         <div class="map-placeholder" id="map-glow">
-                            <div class="map-glow-layer"></div>
-                            <div class="map-content">
-                                <i class="fa-solid fa-location-pin map-pin red-pulse"></i>
-                                <span>Bản đồ chỉ dẫn (Đường Võ Nguyên Giáp ven biển Sơn Trà)</span>
-                            </div>
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3833.8683526543415!2d108.24558237583688!3d16.07267123933703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314217730e060001%3A0x67139151240c0649!2zSMOgaSBT4bqjbiBCw6kgQmnhu4Nu!5e0!3m2!1svi!2svn!4v1718000000000!5m2!1svi!2svn" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                         </div>
                     </div>
 
