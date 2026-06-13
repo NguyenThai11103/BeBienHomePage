@@ -61,7 +61,7 @@ body {
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
-    text-align: justify;
+    text-align: left;
 }
 
 a {
@@ -530,11 +530,14 @@ input, select, textarea, button {
     animation: counter-orbit 40s linear infinite;
 }
 
-/* Radius = 280px, item_half = 70px */
 .orbit-item--1 { top: -70px;  left: 210px; }
-.orbit-item--2 { top: 210px;  left: 490px; }
-.orbit-item--3 { top: 490px;  left: 210px; }
-.orbit-item--4 { top: 210px;  left: -70px; }
+.orbit-item--2 { top: 12px;   left: 408px; }
+.orbit-item--3 { top: 210px;  left: 490px; }
+.orbit-item--4 { top: 408px;  left: 408px; }
+.orbit-item--5 { top: 490px;  left: 210px; }
+.orbit-item--6 { top: 408px;  left: 12px; }
+.orbit-item--7 { top: 210px;  left: -70px; }
+.orbit-item--8 { top: 12px;   left: 12px; }
 
 /* ---- Satellite Thumbnails (now orbiting) ---- */
 .radial-sat {
@@ -1924,7 +1927,8 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
     :root {
         --header-height: 70px;
-        --radial-translate: translate(140px, -50%);
+        --radial-translate: translate(50%, -50%);
+        --logo-translate: translate(50%, -50%);
     }
     
     .section-padding {
@@ -1983,6 +1987,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
         z-index: 999;
         flex: none; /* Reset desktop flex */
         margin-left: 0; /* Reset desktop margin */
+        overflow-y: auto; /* Allow scrolling if screen is short/landscape */
     }
 
     .nav-links.active {
@@ -2047,9 +2052,17 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
         margin-bottom: -60px;
     }
 
-    /* Update logo translate for mobile --radial-translate = translate(140px, -50%) */
+    /* Center the orbit components on mobile */
+    .hero-radial .radial-ring, 
+    .hero-radial .radial-glow, 
+    .hero-radial .radial-center-logo, 
+    .hero-radial .orbit-container {
+        right: 50% !important;
+    }
+
+    /* Update logo translate for mobile centering */
     .radial-center-logo {
-        transform: translate(-20px, -50%);
+        transform: var(--logo-translate) !important;
     }
 
     /* Menu layout */
@@ -2065,7 +2078,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     /* Forms */
     .form-row {
         grid-template-columns: 1fr;
-        gap: 0;
+        gap: 20px;
     }
 
     .reservation-form-container {
@@ -2113,5 +2126,285 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
         transform: translateY(0);
         left: 5% !important;
         right: auto !important;
+    }
+}
+
+/* -------------------------------------------------------------
+   MOBILE MENU GALLERY, LIGHTBOX, BACKDROP STYLES
+   (Added for responsive enhancements)
+------------------------------------------------------------- */
+
+/* Page Zoom Button for Desktop */
+.page-zoom-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: rgba(29, 29, 29, 0.9);
+    border: 1px solid rgba(255, 59, 75, 0.3);
+    color: var(--text-pure);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    opacity: 0;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.page-front:hover .page-zoom-btn,
+.page-back:hover .page-zoom-btn {
+    opacity: 1;
+}
+
+.page-zoom-btn:hover {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    box-shadow: 0 0 15px var(--glow-red-heavy);
+    transform: scale(1.1);
+}
+
+/* Adjust position for left page back side */
+.page-back .page-zoom-btn {
+    right: auto;
+    left: 20px; /* Put zoom button on the outer left edge for flipped pages */
+}
+
+/* Navigation Backdrop */
+.nav-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998; /* Just behind active mobile nav-links (999) */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.nav-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile Menu Gallery (slider) */
+.mobile-menu-gallery {
+    display: none; /* Hidden on desktop */
+    width: 100%;
+    max-width: 450px;
+    margin: 30px auto 0 auto;
+    padding: 0 16px;
+    position: relative;
+    z-index: 5;
+}
+
+.mobile-menu-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    gap: 15px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-color);
+}
+
+.mobile-menu-slider::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.mobile-menu-page {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    aspect-ratio: 560/750; /* Matches desktop page aspect ratio */
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--bg-card);
+    transition: transform 0.2s ease;
+}
+
+.mobile-menu-page:hover {
+    transform: scale(1.01);
+}
+
+.mobile-menu-page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mobile-menu-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.mobile-menu-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-pure);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: var(--transition-normal);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-menu-btn:hover {
+    border-color: var(--primary-red);
+    color: var(--primary-red);
+    box-shadow: 0 0 15px var(--glow-red-heavy);
+    transform: scale(1.1);
+}
+
+#mobile-menu-counter {
+    font-size: 14px;
+    color: var(--text-body);
+    font-family: var(--font-nav);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Menu Lightbox Zoom Modal */
+.menu-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.menu-lightbox.active {
+    display: flex;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--border-color);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 45px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2002;
+    transition: var(--transition-fast);
+    line-height: 1;
+}
+
+.lightbox-close:hover {
+    color: var(--primary-red);
+    transform: scale(1.1);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: rgba(30, 30, 30, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-pure);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    z-index: 2001;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-nav:hover {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: var(--text-pure);
+    box-shadow: 0 0 20px var(--glow-red-heavy);
+}
+
+.lightbox-nav.prev {
+    left: 40px;
+}
+
+.lightbox-nav.next {
+    right: 40px;
+}
+
+.lightbox-counter {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    color: var(--text-muted);
+    font-family: var(--font-nav);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Hide 3D Book on Mobile and Show Slider instead */
+@media (max-width: 768px) {
+    .menu-section .book-container {
+        display: none !important;
+    }
+    .mobile-menu-gallery {
+        display: block;
+    }
+    
+    .lightbox-nav {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+    .lightbox-nav.prev {
+        left: 15px;
+    }
+    .lightbox-nav.next {
+        right: 15px;
     }
 }

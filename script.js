@@ -14,17 +14,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ==========================================
-       2. MOBILE MENU TOGGLE
+       2. MOBILE MENU TOGGLE WITH BACKDROP
        ========================================== */
     const mobileToggle = document.getElementById('mobile-nav-toggle');
     const navMenu = document.getElementById('nav-menu');
+    const navBackdrop = document.getElementById('nav-backdrop');
     const toggleIcon = mobileToggle.querySelector('i');
     
+    function closeMobileMenu() {
+        navMenu.classList.remove('active');
+        if (navBackdrop) navBackdrop.classList.remove('active');
+        toggleIcon.classList.remove('fa-xmark');
+        toggleIcon.classList.add('fa-bars-staggered');
+    }
+
     mobileToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+        const isActive = navMenu.classList.toggle('active');
+        if (navBackdrop) navBackdrop.classList.toggle('active', isActive);
         
         // Change icon between burger menu and cross icon
-        if (navMenu.classList.contains('active')) {
+        if (isActive) {
             toggleIcon.classList.remove('fa-bars-staggered');
             toggleIcon.classList.add('fa-xmark');
         } else {
@@ -33,14 +42,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Close menu when clicking on backdrop
+    if (navBackdrop) {
+        navBackdrop.addEventListener('click', closeMobileMenu);
+    }
+
     // Close menu when clicking on any link
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            toggleIcon.classList.remove('fa-xmark');
-            toggleIcon.classList.add('fa-bars-staggered');
-        });
+        link.addEventListener('click', closeMobileMenu);
     });
 
     /* ==========================================
@@ -310,123 +320,131 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    /* ==========================================
-       8. FEATURED DISHES DATA & DYNAMIC RENDER
-       ========================================== */
-    const featuredDishes = [
+        const featuredDishes = [
         {
             id: 1,
-            image: "img/monan/1.jpg",
+            image: "img/monan/tomsubotoi.png",
             tag: "Bán Chạy",
             rating: 4.9,
             stars: 5,
-            title: "Tôm Hùm Nướng Phô Mai",
-            desc: "Tôm hùm bông tươi sống nướng sốt phô mai đút lò thơm ngậy béo mịn kiểu Pháp."
+            title: "Tôm Sú Bơ Tỏi",
+            desc: "Tôm sú tươi ngon chiên cháy tỏi thơm lừng quyện sốt bơ béo ngậy đậm đà."
         },
         {
             id: 2,
-            image: "img/monan/2.jpg",
-            tag: "Signature",
+            image: "img/monan/tomhumhap.png",
+            tag: "Đặc Sản",
             rating: 5.0,
             stars: 5,
-            title: "Cua Hoàng Đế Sốt Trứng Muối",
-            desc: "Cua Alaska khổng lồ hấp chín, phủ đẫm sốt trứng muối sánh mịn, thơm bùi đậm đà."
+            title: "Tôm Hùm Hấp",
+            desc: "Tôm hùm tươi sống hấp nhiệt giữ trọn vị ngọt thanh tự nhiên cực kỳ săn chắc."
         },
         {
             id: 3,
-            image: "img/monan/3.jpg",
-            tag: "Ưa Thích",
-            rating: 4.8,
-            stars: 4.5,
-            title: "Hàu Sữa Nướng Mỡ Hành",
-            desc: "Hàu sữa béo mọng nướng trên than hồng, xèo xèo mỡ hành thơm lừng, lạc rang giòn rụm."
+            image: "img/monan/cuaxao.png",
+            tag: "Signature",
+            rating: 4.9,
+            stars: 5,
+            title: "Cua Xào",
+            desc: "Cua biển chắc thịt xào cùng sốt đặc chế đậm đà thơm ngon khó cưỡng."
         },
         {
             id: 4,
-            image: "img/monan/4.jpg",
-            tag: "Mới",
-            rating: 4.9,
-            stars: 5,
-            title: "Cá Hồi Áp Chảo Chanh Leo",
-            desc: "Cá hồi Nauy áp chảo da giòn, thịt ẩm mềm quyện sốt chanh leo chua ngọt thơm mát thanh tao."
-        },
-        {
-            id: 5,
-            image: "img/monan/5.png",
-            tag: "Bán Chạy",
-            rating: 5.0,
-            stars: 5,
-            title: "Lẩu Hải Sản Bé Biển",
-            desc: "Nước lẩu chua cay đậm đà chuẩn vị biển khơi, đầy ắp tôm hùm, cua, mực tươi rói và nấm rau thanh mát."
-        },
-        {
-            id: 6,
-            image: "img/monan/6.png",
-            tag: "Đặc Sản",
-            rating: 4.9,
-            stars: 5,
-            title: "Mực Lá Nướng Sa Tế",
-            desc: "Mực lá dày mình ngọt lịm nướng sốt sa tế đặc chế, thơm cay đậm đà đánh thức mọi giác quan."
-        },
-        {
-            id: 7,
-            image: "img/monan/7.png",
+            image: "img/monan/haunuongmohanh.png",
             tag: "Ưa Thích",
             rating: 4.8,
             stars: 4.5,
-            title: "Ghẹ Đỏ Hấp Bia Sả",
-            desc: "Ghẹ đỏ tươi rói bắt tại hồ, hấp bia sả giữ trọn vẹn vị ngọt thanh thuần khiết từ biển khơi."
+            title: "Hàu Nướng Mỡ Hành",
+            desc: "Hàu sữa béo mọng nướng trên than hồng, xèo xèo mỡ hành thơm lừng và lạc rang giòn bùi."
         },
         {
-            id: 8,
-            image: "img/monan/8.png",
+            id: 5,
+            image: "img/monan/sodiepphomai.png",
             tag: "Mới",
-            rating: 5.0,
+            rating: 4.9,
             stars: 5,
-            title: "Sò Điệp Nướng Phô Mai",
-            desc: "Sò điệp cồi to mập mạp nướng sốt phô mai kéo sợi thơm ngậy kết hợp hành phi giòn bùi."
+            title: "Sò Điệp Phô Mai",
+            desc: "Sò điệp cồi to mập mạp nướng sốt phô mai kéo sợi thơm ngậy béo mịn."
         },
         {
-            id: 9,
-            image: "img/monan/9.png",
+            id: 6,
+            image: "img/monan/ochuongsotbotoi.png",
+            tag: "Đặc Sản",
+            rating: 4.8,
+            stars: 4.5,
+            title: "Ốc Hương Hấp",
+            desc: "Ốc hương tự nhiên hấp sả gừng giữ nguyên độ giòn sần sật và vị ngọt thanh đặc trưng."
+        },
+        {
+            id: 7,
+            image: "img/monan/tomtitchaytoi.png",
             tag: "Bán Chạy",
             rating: 4.9,
             stars: 5,
-            title: "Tôm Sú Sốt Bơ Tỏi",
-            desc: "Tôm sú lớn nướng bơ tỏi thơm lừng, thịt tôm ngọt dai đẫm sốt bơ béo ngậy."
+            title: "Tôm Tít Cháy Tỏi",
+            desc: "Tôm tít (bề bề) thịt ngọt đậm đà, cháy tỏi giòn tan thơm lừng kích thích vị giác."
+        },
+        {
+            id: 8,
+            image: "img/monan/muclanuong.png",
+            tag: "Signature",
+            rating: 5.0,
+            stars: 5,
+            title: "Mực Lá Nướng",
+            desc: "Mực lá dày mình ngọt lịm nướng mọi hoặc nướng sa tế thơm phức dai giòn."
+        },
+        {
+            id: 9,
+            image: "img/monan/comchienhaisan.png",
+            tag: "Ưa Thích",
+            rating: 4.7,
+            stars: 4.5,
+            title: "Cơm Chiên Hải Sản",
+            desc: "Hạt cơm vàng óng tơi xốp chiên cùng tôm, mực tươi roi rói và rau củ thanh ngọt."
         },
         {
             id: 10,
-            image: "img/monan/10.png",
-            tag: "Đặc Sản",
-            rating: 4.9,
+            image: "img/monan/lauhaisan.png",
+            tag: "Bán Chạy",
+            rating: 5.0,
             stars: 5,
-            title: "Ốc Hương Rang Muối Ớt",
-            desc: "Ốc hương tươi giòn sần sật rang cùng muối ớt cay nồng đậm vị quyến rũ."
+            title: "Lẩu Hải Sản",
+            desc: "Nước lẩu chua cay đậm đà, đầy ắp tôm, mực, cá tươi cùng các loại rau nấm thanh mát."
         },
         {
             id: 11,
-            image: "img/monan/11.png",
-            tag: "Mới",
-            rating: 5.0,
-            stars: 5,
-            title: "Cua Lột Chiên Giòn Sốt Me",
-            desc: "Cua lột nguyên con tẩm bột chiên giòn rụm, quyện sốt me chua ngọt đậm đà hấp dẫn."
+            image: "img/monan/chipchiphap.png",
+            tag: "Đặc Sản",
+            rating: 4.8,
+            stars: 4.5,
+            title: "Chíp Chíp Hấp",
+            desc: "Chíp chíp tươi sống hấp sả ớt cay nồng, nước hấp ngọt lịm đậm vị biển."
         },
         {
             id: 12,
-            image: "img/monan/12.png",
+            image: "img/monan/camuhap.png",
             tag: "Đặc Sắc",
             rating: 5.0,
             stars: 5,
-            title: "Cá Mú Hấp Hồng Kông",
-            desc: "Cá mú đỏ tươi hấp cùng hành gừng và nước tương đặc chế chuẩn vị nhà hàng Hồng Kông."
+            title: "Cá Mú Hấp",
+            desc: "Cá mú tươi rói hấp hành gừng chuẩn vị, giữ nguyên độ ngọt dai, béo ngậy của thịt cá."
+        },
+        {
+            id: 13,
+            image: "img/monan/raumuongxaotoi.png",
+            tag: "Mới",
+            rating: 4.6,
+            stars: 4.5,
+            title: "Rau Muống Xào Tỏi",
+            desc: "Rau muống xanh mướt giòn sần sật xào cùng tỏi phi vàng thơm phức cực kỳ đưa cơm."
         }
     ];
 
     const featuredScrollInner = document.getElementById('featured-scroll-inner');
     if (featuredScrollInner) {
-        featuredScrollInner.innerHTML = featuredDishes.map(dish => {
+        // Double the dishes array to create a seamless infinite marquee loop
+        const doubleDishes = [...featuredDishes, ...featuredDishes];
+        featuredScrollInner.innerHTML = doubleDishes.map(dish => {
             let starsHTML = '';
             for (let i = 1; i <= 5; i++) {
                 if (i <= Math.floor(dish.stars)) {
@@ -442,7 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="dish-card">
                     <div class="dish-image-container">
                         <img src="${dish.image}" alt="${dish.title}" class="dish-img" loading="lazy">
-                        <span class="dish-tag">${dish.tag}</span>
                     </div>
                     <div class="dish-info">
                         <div class="dish-rating">
@@ -461,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       9. FEATURED DISHES CAROUSEL SCROLL
+       9. FEATURED DISHES INFINITE MARQUEE SCROLL (GLIDING EFFECT)
        ========================================== */
     const scrollWrapper = document.getElementById('featured-scroll-wrapper');
     const featuredPrevBtn = document.getElementById('featured-prev');
@@ -477,47 +494,94 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return 310;
         };
-        
+
+        // Continuous Marquee Logic
+        let speed = 0.8; // Gliding speed (pixels per frame)
+        let isHovered = false;
+        let isTouching = false;
+        let isManualScrolling = false;
+        let animationFrameId = null;
+
+        const loopMarquee = () => {
+            if (isHovered || isTouching || isManualScrolling) {
+                animationFrameId = requestAnimationFrame(loopMarquee);
+                return;
+            }
+
+            const currentScroll = scrollWrapper.scrollLeft;
+            const firstCard = scrollWrapper.querySelector('.dish-card');
+            if (!firstCard) {
+                animationFrameId = requestAnimationFrame(loopMarquee);
+                return;
+            }
+
+            const cardWidth = firstCard.offsetWidth;
+            const gap = parseFloat(window.getComputedStyle(scrollWrapper.querySelector('.featured-scroll-inner')).gap) || 30;
+            // The exact scroll width of one complete set of 4 cards
+            const singleSetWidth = (cardWidth + gap) * featuredDishes.length;
+
+            // Seamlessly wrap around if we have scrolled past the first set
+            if (currentScroll >= singleSetWidth) {
+                scrollWrapper.scrollLeft = currentScroll - singleSetWidth;
+            } else {
+                scrollWrapper.scrollLeft += speed;
+            }
+
+            animationFrameId = requestAnimationFrame(loopMarquee);
+        };
+
+        // Start marquee loop after rendering
+        setTimeout(() => {
+            // Ensure buttons are always visible and active in infinite mode
+            featuredPrevBtn.style.opacity = '1';
+            featuredPrevBtn.style.pointerEvents = 'auto';
+            featuredNextBtn.style.opacity = '1';
+            featuredNextBtn.style.pointerEvents = 'auto';
+            
+            animationFrameId = requestAnimationFrame(loopMarquee);
+        }, 500);
+
+        // Hover & Touch controls to pause/resume marquee smoothly
+        scrollWrapper.addEventListener('mouseenter', () => { isHovered = true; });
+        scrollWrapper.addEventListener('mouseleave', () => { isHovered = false; });
+        scrollWrapper.addEventListener('touchstart', () => { isTouching = true; }, { passive: true });
+        scrollWrapper.addEventListener('touchend', () => {
+            isTouching = false;
+            // Allow swipe momentum scroll to settle before resuming marquee
+            isManualScrolling = true;
+            setTimeout(() => { isManualScrolling = false; }, 1000);
+        }, { passive: true });
+
+        // Manual controls
         featuredPrevBtn.addEventListener('click', () => {
+            isManualScrolling = true;
             scrollWrapper.scrollBy({
                 left: -scrollAmount(),
                 behavior: 'smooth'
             });
+            // Resume marquee after smooth scroll finishes
+            setTimeout(() => { isManualScrolling = false; }, 800);
         });
-        
+
         featuredNextBtn.addEventListener('click', () => {
+            isManualScrolling = true;
+            // If clicking next would scroll past the singleSetWidth, wrap back first
+            const currentScroll = scrollWrapper.scrollLeft;
+            const firstCard = scrollWrapper.querySelector('.dish-card');
+            const cardWidth = firstCard ? firstCard.offsetWidth : 280;
+            const gap = parseFloat(window.getComputedStyle(scrollWrapper.querySelector('.featured-scroll-inner')).gap) || 30;
+            const singleSetWidth = (cardWidth + gap) * featuredDishes.length;
+
+            if (currentScroll >= singleSetWidth - 10) {
+                scrollWrapper.scrollLeft = currentScroll - singleSetWidth;
+            }
+
             scrollWrapper.scrollBy({
                 left: scrollAmount(),
                 behavior: 'smooth'
             });
+            setTimeout(() => { isManualScrolling = false; }, 800);
         });
-        
-        const toggleButtons = () => {
-            const scrollLeft = scrollWrapper.scrollLeft;
-            const maxScrollLeft = scrollWrapper.scrollWidth - scrollWrapper.clientWidth;
-            
-            if (scrollLeft <= 5) {
-                featuredPrevBtn.style.opacity = '0.3';
-                featuredPrevBtn.style.pointerEvents = 'none';
-            } else {
-                featuredPrevBtn.style.opacity = '1';
-                featuredPrevBtn.style.pointerEvents = 'auto';
-            }
-            
-            if (scrollLeft >= maxScrollLeft - 5) {
-                featuredNextBtn.style.opacity = '0.3';
-                featuredNextBtn.style.pointerEvents = 'none';
-            } else {
-                featuredNextBtn.style.opacity = '1';
-                featuredNextBtn.style.pointerEvents = 'auto';
-            }
-        };
-        
-        scrollWrapper.addEventListener('scroll', toggleButtons);
-        window.addEventListener('resize', toggleButtons);
-        
-        // Initial delay to wait for rendering
-        setTimeout(toggleButtons, 500);
     }
 
     /* ==========================================
@@ -545,5 +609,135 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
     }
+
+    /* ==========================================
+       11. MOBILE MENU GALLERY SLIDER
+       ========================================== */
+    const mobileMenuSlider = document.getElementById('mobile-menu-slider');
+    const mobileMenuPrevBtn = document.getElementById('mobile-menu-prev');
+    const mobileMenuNextBtn = document.getElementById('mobile-menu-next');
+    const mobileMenuCounter = document.getElementById('mobile-menu-counter');
+
+    if (mobileMenuSlider && mobileMenuPrevBtn && mobileMenuNextBtn && mobileMenuCounter) {
+        // Update indicator on scroll
+        mobileMenuSlider.addEventListener('scroll', () => {
+            const pageIndex = Math.round(mobileMenuSlider.scrollLeft / mobileMenuSlider.clientWidth) + 1;
+            mobileMenuCounter.textContent = `Trang ${pageIndex} / 18`;
+        });
+
+        // Prev page scroll
+        mobileMenuPrevBtn.addEventListener('click', () => {
+            mobileMenuSlider.scrollBy({
+                left: -mobileMenuSlider.clientWidth,
+                behavior: 'smooth'
+            });
+        });
+
+        // Next page scroll
+        mobileMenuNextBtn.addEventListener('click', () => {
+            mobileMenuSlider.scrollBy({
+                left: mobileMenuSlider.clientWidth,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    /* ==========================================
+       12. MENU LIGHTBOX ZOOM MODAL
+       ========================================== */
+    const lightbox = document.getElementById('menu-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close-btn');
+    const lightboxPrev = document.getElementById('lightbox-prev-btn');
+    const lightboxNext = document.getElementById('lightbox-next-btn');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    
+    let currentLightboxPage = 1;
+
+    function openLightbox(pageNumber) {
+        currentLightboxPage = pageNumber;
+        lightboxImg.src = `img/menu/${pageNumber}.png`;
+        lightboxCounter.textContent = `Trang ${pageNumber} / 18`;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Lock body scroll
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = ''; // Unlock body scroll
+    }
+
+    // Helper to dynamically extract page number from background image url
+    const getPageNumFromBg = (element) => {
+        const bg = window.getComputedStyle(element).backgroundImage;
+        const match = bg.match(/menu\/(\d+)\.png/);
+        return match ? parseInt(match[1]) : 1;
+    };
+
+    // 1. Bind click events for desktop book pages hover zoom button
+    document.querySelectorAll('.page-front, .page-back').forEach(el => {
+        const zoomBtn = document.createElement('div');
+        zoomBtn.className = 'page-zoom-btn';
+        zoomBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass-plus"></i>';
+        zoomBtn.setAttribute('title', 'Phóng to trang này');
+        el.appendChild(zoomBtn);
+        
+        zoomBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent page flipping!
+            const pageNum = getPageNumFromBg(el);
+            openLightbox(pageNum);
+        });
+    });
+
+    // 2. Bind click events for mobile menu slider pages
+    document.querySelectorAll('.mobile-menu-page').forEach(el => {
+        el.addEventListener('click', () => {
+            const pageNum = parseInt(el.getAttribute('data-page')) || 1;
+            openLightbox(pageNum);
+        });
+    });
+
+    // Lightbox navigation
+    if (lightboxPrev && lightboxNext) {
+        lightboxPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentLightboxPage > 1) {
+                openLightbox(currentLightboxPage - 1);
+            }
+        });
+
+        lightboxNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentLightboxPage < 18) {
+                openLightbox(currentLightboxPage + 1);
+            }
+        });
+    }
+
+    // Close lightbox triggers
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+    }
+    if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+            // Click outside the image content to close
+            if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+                closeLightbox();
+            }
+        });
+    }
+
+    // Keyboard support (Escape to close, Left/Right arrow keys to navigate)
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox || !lightbox.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft' && currentLightboxPage > 1) {
+            openLightbox(currentLightboxPage - 1);
+        } else if (e.key === 'ArrowRight' && currentLightboxPage < 18) {
+            openLightbox(currentLightboxPage + 1);
+        }
+    });
 });
 
