@@ -1,41 +1,108 @@
+// ============================================================
+// CẤU HÌNH — Chỉ cần điền TOKEN vào đây
+// ============================================================
+const TELEGRAM_TOKEN = "ĐIỀN_TOKEN_BOT_CỦA_BẠN_VÀO_ĐÂY";
 
+// ============================================================
+// doGet — Kiểm tra server còn sống
+// ============================================================
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({ ok: true, message: "Bot đặt bàn Bé Biển đang hoạt động!" }))
+  return ContentService.createTextOutput(
+    JSON.stringify({ ok: true, message: "Bot đặt bàn Bé Biển đang hoạt động!" })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ============================================================
+// doPost — Chỉ nhận đặt bàn từ website (không dùng webhook Telegram)
+// ============================================================
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    if (data.bookingCode) {
+      handleBooking(data);
+    }
+  } catch (error) {
+    Logger.log("doPost error: " + error.toString());
+  }
+  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 // ============================================================
-// HÀM CHÍNH — Nhận tất cả POST request
+// POLLING — Trigger 1 phút, nhưng loop bên trong mỗi 10 giây
+// → Bot phản hồi tối đa sau 10 giây
 // ============================================================
-function doPost(e) {
+function pollTelegramUpdates() {
+  // Dùng lock để tránh 2 trigger chạy song song
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(2000)) return;
+
   try {
-    const data = JSON.parse(e.postData.contents);
-
-    if (data.message) {
-      // Request đến từ Telegram (lệnh /subscribe, /unsubscribe...)
-      handleTelegramCommand(data.message);
-    } else if (data.bookingCode) {
-      // Request đến từ website đặt bàn
-      handleBooking(data);
+    var deadline = new Date().getTime() + 50000; // chạy 50 giây
+    while (new Date().getTime() < deadline) {
+      fetchUpdates_();
+      Utilities.sleep(10000); // đợi 10 giây rồi poll tiếp
     }
-
-    return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
   }
+}
+
+// Hàm nội bộ: gọi getUpdates và xử lý từng tin nhắn
+function fetchUpdates_() {
+  var props  = PropertiesService.getScriptProperties();
+  var offset = parseInt(props.getProperty("POLL_OFFSET") || "0", 10);
+
+  var url = "https://api.telegram.org/bot" + TELEGRAM_TOKEN +
+            "/getUpdates?timeout=0&offset=" + offset;
+
+  var res  = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  var json = JSON.parse(res.getContentText());
+
+  if (!json.ok || !json.result || json.result.length === 0) return;
+
+  json.result.forEach(function(update) {
+    if (update.message) {
+      handleTelegramCommand(update.message);
+    }
+    props.setProperty("POLL_OFFSET", String(update.update_id + 1));
+  });
+}
+
+// ============================================================
+// CÀI TIME TRIGGER — Chạy 1 lần duy nhất để bật tính năng polling
+// ============================================================
+function setupPollingTrigger() {
+  // Xoá trigger cũ nếu có
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === "pollTelegramUpdates") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+  // Tạo trigger chạy mỗi 1 phút (bên trong loop mỗi 10 giây)
+  ScriptApp.newTrigger("pollTelegramUpdates")
+    .timeBased()
+    .everyMinutes(1)
+    .create();
+  Logger.log("✅ Trigger đã cài. Bot phản hồi trong tối đa 10 giây.");
+}
+
+// Hàm tắt polling (khi không dùng nữa)
+function removePollingTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === "pollTelegramUpdates") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+  Logger.log("Đã tắt trigger polling.");
 }
 
 // ============================================================
 // XỬ LÝ ĐẶT BÀN TỪ WEBSITE
 // ============================================================
 function handleBooking(data) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const timestamp = new Date();
+  var sheet     = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var timestamp = new Date();
 
   sheet.appendRow([
     timestamp,
@@ -48,7 +115,7 @@ function handleBooking(data) {
     data.note || ""
   ]);
 
-  const message =
+  var message =
     "🔔 *THÔNG BÁO ĐẶT BÀN MỚI*\n\n" +
     "📌 *Mã đặt bàn:* " + data.bookingCode + "\n" +
     "👤 *Khách hàng:* " + data.name + "\n" +
@@ -59,22 +126,20 @@ function handleBooking(data) {
     "📝 *Ghi chú:* " + (data.note ? "_" + data.note + "_" : "_Không có_") + "\n\n" +
     "🕒 *Thời gian đặt:* " + Utilities.formatDate(timestamp, "GMT+7", "dd/MM/yyyy HH:mm:ss");
 
-  const subscribers = getSubscribers();
-  if (subscribers.length > 0) {
-    subscribers.forEach(function(sub) {
-      sendTelegramMessage(sub.chatId, message);
-    });
-  }
+  var subscribers = getSubscribers();
+  subscribers.forEach(function(sub) {
+    sendTelegramMessage(sub.chatId, message);
+  });
 }
 
 // ============================================================
 // XỬ LÝ LỆNH TỪ TELEGRAM (/subscribe, /unsubscribe, /status)
 // ============================================================
 function handleTelegramCommand(message) {
-  const chatId    = String(message.chat.id);
-  const text      = (message.text || "").trim().toLowerCase();
-  const firstName = message.chat.first_name || "Bạn";
-  const username  = message.chat.username ? "@" + message.chat.username : firstName;
+  var chatId    = String(message.chat.id);
+  var text      = (message.text || "").trim().toLowerCase();
+  var firstName = message.chat.first_name || "Bạn";
+  var username  = message.chat.username ? "@" + message.chat.username : firstName;
 
   if (text === "/subscribe" || text === "/start") {
     if (isSubscribed(chatId)) {
@@ -132,7 +197,7 @@ function handleTelegramCommand(message) {
 // QUẢN LÝ SUBSCRIBERS — Lưu vào sheet "Subscribers"
 // ============================================================
 function getSubscribersSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("Subscribers");
   if (!sheet) {
     sheet = ss.insertSheet("Subscribers");
@@ -187,16 +252,6 @@ function sendTelegramMessage(chatId, text) {
     muteHttpExceptions: true
   };
   UrlFetchApp.fetch(url, options);
-}
-
-// ============================================================
-// CÀI WEBHOOK — Chạy 1 lần duy nhất sau khi deploy
-// ============================================================
-function setupWebhook() {
-  var webAppUrl = ScriptApp.getService().getUrl();
-  var url = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/setWebhook?url=" + encodeURIComponent(webAppUrl);
-  var res = UrlFetchApp.fetch(url);
-  Logger.log("Kết quả cài webhook: " + res.getContentText());
 }
 
 // ============================================================

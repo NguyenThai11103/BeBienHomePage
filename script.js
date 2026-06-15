@@ -469,17 +469,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3 class="dish-title">${dish.title}</h3>
                         <p class="dish-desc">${dish.desc}</p>
                         <div class="dish-footer">
-                            <a href="#contact" class="btn-dish-order-full">Đặt món ngay <i class="fa-solid fa-arrow-right"></i></a>
+                            <a href="#contact" class="btn-dish-order-full">Đặt bàn ngay <i class="fa-solid fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
             `;
         }).join('');
     }
-
-    /* ==========================================
-       9. FEATURED DISHES INFINITE MARQUEE SCROLL (GLIDING EFFECT)
-       ========================================== */
     const scrollWrapper = document.getElementById('featured-scroll-wrapper');
     const featuredPrevBtn = document.getElementById('featured-prev');
     const featuredNextBtn = document.getElementById('featured-next');
@@ -495,8 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return 310;
         };
 
-        // Continuous Marquee Logic
-        let speed = 0.8; // Gliding speed (pixels per frame)
+        let speed = 0.8; 
         let isHovered = false;
         let isTouching = false;
         let isManualScrolling = false;
@@ -517,10 +512,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const cardWidth = firstCard.offsetWidth;
             const gap = parseFloat(window.getComputedStyle(scrollWrapper.querySelector('.featured-scroll-inner')).gap) || 30;
-            // The exact scroll width of one complete set of 4 cards
             const singleSetWidth = (cardWidth + gap) * featuredDishes.length;
 
-            // Seamlessly wrap around if we have scrolled past the first set
             if (currentScroll >= singleSetWidth) {
                 scrollWrapper.scrollLeft = currentScroll - singleSetWidth;
             } else {
@@ -530,9 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
             animationFrameId = requestAnimationFrame(loopMarquee);
         };
 
-        // Start marquee loop after rendering
         setTimeout(() => {
-            // Ensure buttons are always visible and active in infinite mode
             featuredPrevBtn.style.opacity = '1';
             featuredPrevBtn.style.pointerEvents = 'auto';
             featuredNextBtn.style.opacity = '1';
@@ -541,31 +532,26 @@ document.addEventListener('DOMContentLoaded', () => {
             animationFrameId = requestAnimationFrame(loopMarquee);
         }, 500);
 
-        // Hover & Touch controls to pause/resume marquee smoothly
         scrollWrapper.addEventListener('mouseenter', () => { isHovered = true; });
         scrollWrapper.addEventListener('mouseleave', () => { isHovered = false; });
         scrollWrapper.addEventListener('touchstart', () => { isTouching = true; }, { passive: true });
         scrollWrapper.addEventListener('touchend', () => {
             isTouching = false;
-            // Allow swipe momentum scroll to settle before resuming marquee
             isManualScrolling = true;
             setTimeout(() => { isManualScrolling = false; }, 1000);
         }, { passive: true });
 
-        // Manual controls
         featuredPrevBtn.addEventListener('click', () => {
             isManualScrolling = true;
             scrollWrapper.scrollBy({
                 left: -scrollAmount(),
                 behavior: 'smooth'
             });
-            // Resume marquee after smooth scroll finishes
             setTimeout(() => { isManualScrolling = false; }, 800);
         });
 
         featuredNextBtn.addEventListener('click', () => {
             isManualScrolling = true;
-            // If clicking next would scroll past the singleSetWidth, wrap back first
             const currentScroll = scrollWrapper.scrollLeft;
             const firstCard = scrollWrapper.querySelector('.dish-card');
             const cardWidth = firstCard ? firstCard.offsetWidth : 280;
@@ -583,10 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { isManualScrolling = false; }, 800);
         });
     }
-
-    /* ==========================================
-       10. TESTIMONIALS COLLAGE DYNAMIC RENDER
-       ========================================== */
     const reviewImages = [
         "img/danhgia/danh_gia_1.png",
         "img/danhgia/danh_gia_2.png",
@@ -609,10 +591,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
     }
-
-    /* ==========================================
-       11. MOBILE MENU GALLERY SLIDER
-       ========================================== */
     const mobileMenuSlider = document.getElementById('mobile-menu-slider');
     const mobileMenuPrevBtn = document.getElementById('mobile-menu-prev');
     const mobileMenuNextBtn = document.getElementById('mobile-menu-next');

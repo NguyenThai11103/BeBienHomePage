@@ -48,10 +48,9 @@ Tài liệu này hướng dẫn chi tiết từng bước để tích hợp hệ
 1. Trên thanh công cụ của Google Sheet, chọn **Tiện ích mở rộng (Extensions)** -> **Apps Script**.
 2. Xóa toàn bộ đoạn code mặc định đang có trong khung soạn thảo.
 3. Mở file [google-apps-script.js](file:///d:/Projects/OnePageBeBien/google-apps-script.js) trong thư mục dự án của bạn, copy toàn bộ nội dung mã nguồn đó và dán vào Apps Script.
-4. Chỉnh sửa dòng số **2** và dòng số **3** bằng thông tin bạn đã lấy ở Bước 1:
+4. Chỉnh sửa dòng số **4** bằng thông tin bạn đã lấy ở Bước 1:
    ```javascript
    const TELEGRAM_TOKEN = "Điền_Token_Bot_Của_Bạn_Vào_Đây";
-   const TELEGRAM_CHAT_ID = "Điền_Chat_ID_Của_Bạn_Vào_Đây";
    ```
 5. Nhấn biểu tượng 💾 **Lưu dự án (Save project)** (phím tắt `Ctrl + S`).
 
@@ -80,7 +79,20 @@ Tài liệu này hướng dẫn chi tiết từng bước để tích hợp hệ
 
 ---
 
-## BƯỚC 4: KẾT NỐI VÀO MÃ NGUỒN WEBSITE (FRONTEND)
+## BƯỚC 4: KÍCH HOẠT WEBHOOK CHO TELEGRAM BOT (QUAN TRỌNG NHẤT)
+
+Để Telegram Bot có thể hiểu các lệnh như `/subscribe`, `/unsubscribe`, `/status` và gửi tin nhắn phản hồi, bạn bắt buộc phải đăng ký Web App URL với Telegram:
+
+1. Quay lại giao diện **Apps Script** trên trình duyệt.
+2. Trên thanh công cụ phía trên (cạnh nút **Chạy / Run**), nhấp vào ô chọn tên hàm (mặc định đang hiển thị `doGet` hoặc `doPost`).
+3. Chọn hàm **`setupWebhook`** từ danh sách.
+4. Nhấn nút **▶ Chạy (Run)**.
+5. Xem ô **Nhật ký thực thi (Execution log)** bên dưới. Nếu có dòng chữ kết quả thành công (`"ok": true`) là đã hoàn tất!
+*(Nếu Apps Script yêu cầu cấp quyền truy cập mạng để gửi yêu cầu đến Telegram, hãy nhấn Cho phép/Ủy quyền tương tự như Bước 3).*
+
+---
+
+## BƯỚC 5: KẾT NỐI VÀO MÃ NGUỒN WEBSITE (FRONTEND)
 
 Sau khi có đường dẫn Web App URL ở Bước 3:
 1. Bạn gửi đường dẫn đó cho tôi.
@@ -89,3 +101,4 @@ Sau khi có đường dẫn Web App URL ở Bước 3:
 
 ---
 *Chúc bạn cấu hình thành công! Nếu gặp khó khăn ở bước nào, hãy chụp màn hình hoặc gửi tin nhắn để tôi hỗ trợ bạn ngay.*
+
