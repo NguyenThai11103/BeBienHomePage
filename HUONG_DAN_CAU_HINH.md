@@ -4,6 +4,40 @@ Tài liệu này hướng dẫn chi tiết từng bước để tích hợp hệ
 
 ---
 
+## GỢI Ý TÊN MIỀN KHI DEPLOY WEBSITE
+
+Ưu tiên tên miền ngắn, dễ đọc qua điện thoại, có thương hiệu **Bé Biển** và nếu cần thì thêm tín hiệu địa phương **Đà Nẵng / Mỹ Khê**.
+
+### Lựa chọn nên ưu tiên
+1. `bebien.vn`
+2. `haisanbebien.vn`
+3. `bebienseafood.vn`
+4. `haisanbebien.com`
+5. `bebienrestaurant.com`
+
+### Nếu muốn SEO địa phương Đà Nẵng mạnh hơn
+1. `haisanbebiendanang.vn`
+2. `bebien-danang.vn`
+3. `seafoodbebien.com`
+4. `danangbebien.com`
+5. `bebiendanang.vn`
+
+### Nếu các tên chính đã bị mua
+1. `nhahangbebien.vn`
+2. `bebienmykhe.vn`
+3. `haisanmykhebebien.vn`
+4. `bebienseafood.com.vn`
+5. `nhahanghaisanbebien.vn`
+
+**Khuyến nghị:** Nếu còn, chọn `bebien.vn`. Nếu muốn chắc SEO ngành nghề hơn, chọn `haisanbebien.vn`.
+
+Sau khi chốt tên miền thật, cần thay domain mẫu `https://haisanbebien.vn/` trong các file:
+- `index.html`
+- `robots.txt`
+- `sitemap.xml`
+
+---
+
 ## BƯỚC 1: TẠO TELEGRAM BOT & LẤY THÔNG TIN KẾT NỐI
 
 ### 1.1. Tạo Telegram Bot mới
@@ -101,4 +135,3 @@ Sau khi có đường dẫn Web App URL ở Bước 3:
 
 ---
 *Chúc bạn cấu hình thành công! Nếu gặp khó khăn ở bước nào, hãy chụp màn hình hoặc gửi tin nhắn để tôi hỗ trợ bạn ngay.*
-

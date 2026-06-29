@@ -1,7 +1,7 @@
 // ============================================================
 // CẤU HÌNH — Chỉ cần điền TOKEN vào đây
 // ============================================================
-const TELEGRAM_TOKEN = "ĐIỀN_TOKEN_BOT_CỦA_BẠN_VÀO_ĐÂY";
+const TELEGRAM_TOKEN = "8220126426:AAHmGZUzttek52mSpz4WejadJtDeg2J9S8Q";
 
 // ============================================================
 // doGet — Kiểm tra server còn sống
@@ -17,15 +17,21 @@ function doGet(e) {
 // ============================================================
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
-    if (data.bookingCode) {
+    var body = e && e.postData && e.postData.contents ? e.postData.contents : "{}";
+    var data = JSON.parse(body);
+
+    if (isTelegramUpdate_(data)) {
+      handleTelegramUpdate_(data);
+    } else if (data.bookingCode) {
       handleBooking(data);
+    } else {
+      Logger.log("doPost ignored unknown payload: " + body);
     }
   } catch (error) {
     Logger.log("doPost error: " + error.toString());
   }
-  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-    .setMimeType(ContentService.MimeType.JSON);
+
+  return jsonOutput_({ ok: true });
 }
 
 // ============================================================
@@ -53,20 +59,40 @@ function fetchUpdates_() {
   var props  = PropertiesService.getScriptProperties();
   var offset = parseInt(props.getProperty("POLL_OFFSET") || "0", 10);
 
-  var url = "https://api.telegram.org/bot" + TELEGRAM_TOKEN +
+  var url = "https://api.telegram.org/bot" + getTelegramToken_() +
             "/getUpdates?timeout=0&offset=" + offset;
 
   var res  = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
   var json = JSON.parse(res.getContentText());
 
-  if (!json.ok || !json.result || json.result.length === 0) return;
+  if (!json.ok) {
+    Logger.log("getUpdates error: " + res.getContentText());
+    return;
+  }
+  if (!json.result || json.result.length === 0) return;
 
   json.result.forEach(function(update) {
-    if (update.message) {
-      handleTelegramCommand(update.message);
-    }
+    handleTelegramUpdate_(update);
     props.setProperty("POLL_OFFSET", String(update.update_id + 1));
   });
+}
+
+function isTelegramUpdate_(data) {
+  return data && (
+    typeof data.update_id !== "undefined" ||
+    data.message ||
+    data.edited_message ||
+    data.channel_post
+  );
+}
+
+function handleTelegramUpdate_(update) {
+  var message = update.message || update.edited_message || update.channel_post;
+  if (!message) {
+    Logger.log("Telegram update ignored: " + JSON.stringify(update));
+    return;
+  }
+  handleTelegramCommand(message);
 }
 
 // ============================================================
@@ -95,6 +121,43 @@ function removePollingTrigger() {
     }
   });
   Logger.log("Đã tắt trigger polling.");
+}
+
+// ============================================================
+// WEBHOOK TELEGRAM — Chạy setupWebhook sau khi deploy Web App
+// ============================================================
+function setupWebhook() {
+  var webAppUrl = ScriptApp.getService().getUrl();
+  if (!webAppUrl) {
+    throw new Error("Chưa tìm thấy Web App URL. Hãy deploy Apps Script thành Web App trước.");
+  }
+
+  removePollingTrigger();
+
+  var url = "https://api.telegram.org/bot" + getTelegramToken_() + "/setWebhook";
+  var payload = {
+    url: webAppUrl,
+    allowed_updates: ["message", "edited_message", "channel_post"]
+  };
+  var res = UrlFetchApp.fetch(url, {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+  Logger.log("setWebhook response: " + res.getContentText());
+}
+
+function removeWebhook() {
+  var url = "https://api.telegram.org/bot" + getTelegramToken_() + "/deleteWebhook";
+  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  Logger.log("deleteWebhook response: " + res.getContentText());
+}
+
+function checkTelegramWebhook() {
+  var url = "https://api.telegram.org/bot" + getTelegramToken_() + "/getWebhookInfo";
+  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  Logger.log("getWebhookInfo response: " + res.getContentText());
 }
 
 // ============================================================
@@ -239,7 +302,7 @@ function removeSubscriber(chatId) {
 // GỬI TIN NHẮN TELEGRAM
 // ============================================================
 function sendTelegramMessage(chatId, text) {
-  var url     = "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage";
+  var url     = "https://api.telegram.org/bot" + getTelegramToken_() + "/sendMessage";
   var payload = {
     chat_id:    chatId,
     text:       text,
@@ -251,12 +314,35 @@ function sendTelegramMessage(chatId, text) {
     payload:            JSON.stringify(payload),
     muteHttpExceptions: true
   };
-  UrlFetchApp.fetch(url, options);
+  var res = UrlFetchApp.fetch(url, options);
+  var body = res.getContentText();
+  var json = JSON.parse(body);
+  if (!json.ok) {
+    Logger.log("sendMessage error: " + body);
+    delete payload.parse_mode;
+    options.payload = JSON.stringify(payload);
+    res = UrlFetchApp.fetch(url, options);
+    Logger.log("sendMessage fallback response: " + res.getContentText());
+  }
 }
 
 // ============================================================
 // TIỆN ÍCH
 // ============================================================
+function getTelegramToken_() {
+  var token = PropertiesService.getScriptProperties().getProperty(TELEGRAM_TOKEN_PROPERTY) || TELEGRAM_TOKEN;
+  token = (token || "").trim();
+  if (!token || token.indexOf("ĐIỀN_TOKEN") !== -1) {
+    throw new Error("Chưa cấu hình TELEGRAM_TOKEN. Hãy điền token trong code hoặc Script Properties.");
+  }
+  return token;
+}
+
+function jsonOutput_(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return "";
   var parts = dateStr.split("-");
