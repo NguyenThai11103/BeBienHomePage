@@ -396,18 +396,21 @@ input, select, textarea, button {
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: 52px; /* Slightly reduced to fit split layout perfectly */
+    font-size: clamp(18px, 3.2vw, 40px);
     line-height: 1.15;
     color: var(--text-pure);
     font-weight: 800;
     margin-bottom: 25px;
     text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
 }
 
 .hero-description {
     font-size: 16px;
     color: var(--text-body);
     margin-bottom: 40px;
+    text-align: justify;
+    text-align-last: left;
 }
 
 .hero-actions {
@@ -1899,10 +1902,6 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
     }
-    .hero-title {
-        font-size: 50px;
-    }
-    
     .featured-scroll-inner .dish-card {
         flex: 0 0 calc(33.333% - 20px);
     }
@@ -2033,10 +2032,6 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
         gap: 15px;
     }
 
-    .hero-title {
-        font-size: 38px;
-    }
-
     .hero-description {
         font-size: 15px;
         margin: 0 auto 30px auto;
@@ -2087,9 +2082,6 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 480px) {
-    .hero-title {
-        font-size: 32px;
-    }
     .section-title {
         font-size: 28px;
     }

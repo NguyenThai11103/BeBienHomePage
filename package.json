@@ -4,7 +4,7 @@
   "description": "One-Page Website for Be Bien Seafood Restaurant",
   "main": "index.html",
   "scripts": {
-    "dev": "npx -y browser-sync start --server --files \"index.html, style.css, script.js, img/**/*\""
+    "dev": "npx -y browser-sync start --server --files \"index.html, style.css, script.js, img/**/*\" --no-notify"
   },
   "keywords": [
     "seafood",
